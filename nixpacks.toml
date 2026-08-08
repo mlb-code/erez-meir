@@ -1,0 +1,14 @@
+# שליטה מפורשת בשלבי הבנייה ב-Railway.
+# מכוון: npm install ולא npm ci — npm ci נופל על כל פער קטן בין
+# package.json לקובץ הנעילה, והוא רגיש להבדלי גרסאות npm בין מק ללינוקס.
+[phases.setup]
+nixPkgs = ['nodejs_22']
+
+[phases.install]
+cmds = ['npm install --no-audit --no-fund']
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npm run start'
