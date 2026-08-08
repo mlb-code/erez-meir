@@ -32,9 +32,17 @@ export function formatRooms(rooms: number): string {
   return `${text} חדרים`;
 }
 
+/**
+ * כל התאריכים מוצגים בשעון ישראל, ולא בשעון של המכשיר או של השרת.
+ * זה נכון מבחינת המוצר (פלטפורמה ישראלית), וגם מונע פער בין מה שהשרת
+ * מרנדר לבין מה שהדפדפן מרנדר — פער כזה גורם ל-React לרנדר מחדש.
+ */
+const TIME_ZONE = 'Asia/Jerusalem';
+
 /** תאריך קצר בעברית. */
 export function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('he-IL', {
+    timeZone: TIME_ZONE,
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -44,11 +52,17 @@ export function formatDate(iso: string): string {
 /** שעה ותאריך קצרים, לשימוש בצ'אט. */
 export function formatMessageTime(iso: string): string {
   const date = new Date(iso);
-  const today = new Date();
-  const sameDay = date.toDateString() === today.toDateString();
+  const dayKey = (value: Date) => value.toLocaleDateString('he-IL', { timeZone: TIME_ZONE });
+  const sameDay = dayKey(date) === dayKey(new Date());
+
   return sameDay
-    ? date.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })
+    ? date.toLocaleTimeString('he-IL', {
+        timeZone: TIME_ZONE,
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : date.toLocaleString('he-IL', {
+        timeZone: TIME_ZONE,
         day: 'numeric',
         month: 'numeric',
         hour: '2-digit',
