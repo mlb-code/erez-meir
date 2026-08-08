@@ -1,36 +1,181 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# החלפה — פלטפורמת החלפת דירות
 
-## Getting Started
+MVP עובד לפלטפורמה ישראלית לעסקאות חליפין בנדל"ן. במקום למכור דירה ואז לקנות אחרת,
+בעלי דירות מפרסמים את הדירה **להחלפה**, מגדירים מה הם מחפשים בתמורה, והמערכת מוצאת
+התאמות ישירות **וגם מעגלי החלפה** של שלושה עד חמישה בעלי דירות.
 
-First, run the development server:
+---
+
+## איך מריצים את זה על המחשב
+
+פותחים טרמינל, ומריצים שתי שורות:
 
 ```bash
+cd "/Users/meirlb/Desktop/Pyton1/pyton corus 1/apartment-swap"
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+אחרי כמה שניות יופיע בטרמינל `Ready`. עכשיו פותחים בדפדפן:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**http://localhost:3100**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+כדי לעצור את השרת — לוחצים בטרמינל `Ctrl` + `C`.
 
-## Learn More
+> אם מופיעה שגיאה `EADDRINUSE`, סימן שמשהו אחר כבר תופס את הפורט.
+> מריצים `lsof -nP -iTCP:3100 -sTCP:LISTEN -t | xargs kill -9` ואז שוב `npm run dev`.
 
-To learn more about Next.js, take a look at the following resources:
+### אם מורידים את הפרויקט ממחשב אחר
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+קובץ `.env.local`, שמכיל את פרטי החיבור ל-Supabase, **לא נשמר ב-git** — זה מכוון.
+במחשב חדש צריך פעם אחת:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+cp .env.example .env.local
+```
 
-## Deploy on Vercel
+ואז לפתוח את `.env.local` ולמלא את שתי השורות הראשונות מתוך הדשבורד של Supabase,
+תחת **Project Settings → API**: את הכתובת (`Project URL`) ואת המפתח הציבורי
+(`publishable key`). את השורה השלישית משאירים כמו שהיא.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## חשבונות הדגמה
+
+הסיסמה לכל חשבונות הדמו: `Demo1234!`
+
+בעמוד ההתחברות יש כפתורי כניסה מהירה שממלאים את הטופס לבד. כל חשבון מדגים שלב אחר:
+
+| חשבון | אימייל | מה רואים אצלו |
+|---|---|---|
+| יהודה | `yehuda@demo.swap.co.il` | התאמה ישירה חדשה שממתינה לתגובה |
+| ערן | `eran@demo.swap.co.il` | שרשרת של 4 שכולם אישרו — עם צ׳אט קבוצתי פעיל |
+| גיל | `gil@demo.swap.co.il` | שרשרת של 3 חדשה |
+| דוד | `david@demo.swap.co.il` | שרשרת שממתינה לאישור שאר המשתתפים |
+
+יש עוד 21 חשבונות דמו באותו פורמט (`<שם>@demo.swap.co.il`), אחד לכל מודעה.
+
+### מה יש בנתוני הדמו
+
+25 מודעות בגוש דן והשרון, בשווי 2.2–7 מיליון ש"ח, שמייצרות בכוונה:
+
+- **3 התאמות ישירות** (מעגל של 2)
+- **2 שרשראות תלת-כיווניות**
+- **שרשרת אחת של 4**
+
+---
+
+## מסלול הדגמה מומלץ
+
+1. **דף הבית** — ההסבר בשלושה צעדים והאיור של מעגל תלת-כיווני.
+2. **לוח ההחלפות** — כל כרטיס מציג גם "מחפש בתמורה". זה מה שמבדיל את הלוח מלוח מודעות רגיל.
+3. **התחברות כערן** → *ההתאמות שלי* → לשונית **שרשראות** — דיאגרמת המעגל של 4, כולל סכום ההשלמה בכל מעבר.
+4. **צ׳אט משותף** — נפתח רק אחרי שכל המשתתפים אישרו.
+5. **התחברות כיהודה** → לחיצה על **"מעוניין בהחלפה"** בהתאמה הישירה.
+6. **פרסום מודעה** — אשף בן 4 צעדים, כולל העלאת תמונות. בסיום המערכת מריצה את מנוע ההתאמות ומציגה מיד מה נמצא.
+
+---
+
+## פקודות
+
+| פקודה | מה היא עושה |
+|---|---|
+| `npm run dev` | מריץ את האתר מקומית על פורט 3100 |
+| `npm run build` | בונה גרסת ייצור ובודק שאין שגיאות |
+| `npm test` | 30 בדיקות יחידה למנוע ההתאמות ולפורמט הסכומים |
+| `npm run verify:matches` | מריץ את המנוע על הנתונים האמיתיים ומדפיס כל מעגל שנמצא |
+| `npm run check:e2e` | בדיקת קצה-אל-קצה מול Supabase: התאמות, אישורים, צ׳אט והרשאות |
+
+---
+
+## מנוע ההתאמות
+
+הקוד: [`src/lib/matching/engine.ts`](src/lib/matching/engine.ts) · הכיול: [`src/lib/matching/config.ts`](src/lib/matching/config.ts)
+
+הבעיה ממודלת כגרף מכוון. כל מודעה פעילה היא צומת, וקיימת קשת מ-A ל-B אם הדירה של B
+עונה על "מה אני מחפש" של A:
+
+1. העיר של B נמצאת ברשימת הערים של A
+2. מספר החדרים והשטח של B בטווחים של A
+3. כל המאפיינים שA דרש קיימים ב-B
+4. **פער המזומן**: אם הדירה של B יקרה יותר — הפער לא עולה על `cash_add_max` של A.
+   אם היא זולה יותר — ההשלמה שA מקבל לא נמוכה מ-`cash_receive_min` שלו.
+
+**התאמה ישירה** = מעגל באורך 2. **שרשרת** = מעגל באורך 3–5, שבו כל משתתף עובר לדירה
+של הבא אחריו והאחרון עובר לדירה של הראשון. פערי המזומן נבדקים לכל קשת בנפרד.
+
+איתור המעגלים נעשה ב-DFS עם עומק חסום 5. כל מעגל מנורמל כך שהוא מתחיל במזהה הקטן
+ביותר שבו, ולכן אותו מעגל לא נשמר פעמיים.
+
+**הציון (0–100)** משקלל שלושה רכיבים: קרבת שווי (פער מזומן קטן = ציון גבוה), עודף על
+הקריטריונים (מקבלים יותר חדרים או שטח מהמינימום שביקשו), ואורך המעגל (התאמה ישירה
+מקבלת בונוס, כל חוליה נוספת גוררת קנס). כל הקבועים נמצאים בקובץ `config.ts` אחד וניתנים
+לכוונון בלי לגעת בלוגיקה.
+
+---
+
+## מבנה הפרויקט
+
+```
+src/
+  app/
+    page.tsx              דף נחיתה
+    listings/             לוח החיפוש + דף מודעה
+    new/                  אשף פרסום מודעה (4 צעדים) + מסך סיום
+    matches/              מסך ההתאמות + צ׳אט לכל התאמה
+    account/              אזור אישי — פרופיל וניהול מודעות
+    login/, signup/       הרשמה והתחברות
+    auth/callback/        יעד קישור אימות האימייל
+  components/             כותרת, כרטיס מודעה, דיאגרמת מעגל, גלריה, טפסים
+  lib/
+    matching/             מנוע ההתאמות + הבדיקות שלו
+    actions/              Server Actions עם ולידציית Zod
+    data/                 שאילתות לשכבת הנתונים
+    supabase/             לקוחות Supabase לדפדפן ולשרת
+scripts/                  כלי בדיקה ואימות
+supabase/
+  schema.sql            הסכמה, ה-RLS, הטריגרים והאחסון — לשחזור מאפס
+  seed.sql              25 מודעות ההדגמה
+```
+
+---
+
+## בסיס הנתונים
+
+הפרויקט מחובר לפרויקט Supabase בשם **apartment-swap** (אזור פרנקפורט, מסלול חינם).
+פרטי החיבור נמצאים בקובץ `.env.local`, שלא נכנס ל-git.
+
+כל הטבלאות מוגנות ב-RLS:
+
+- מודעות פעילות גלויות לכולם, **גם למי שלא מחובר** — אבל בלי שום פרט מזהה של הבעלים.
+- שם וטלפון נחשפים **רק** לצדדים שאישרו יחד את אותה החלפה.
+- התאמות והודעות נגישות רק למשתתפים במעגל.
+- הצ׳אט נחסם ברמת בסיס הנתונים עד שכל המשתתפים סימנו "מעוניין".
+
+פונקציות העזר שמדיניות ה-RLS משתמשת בהן יושבות בסכמה נפרדת בשם `private`, שלא נחשפת
+דרך ה-API — ולכן אי אפשר לקרוא להן מבחוץ.
+
+הכללים האלה נבדקים אוטומטית ב-`npm run check:e2e`.
+
+### דבר אחד שכדאי להדליק בדשבורד
+
+בדשבורד של Supabase, תחת **Authentication → Policies → Password protection**, יש מתג
+בשם *Leaked password protection*. הוא מונע מהמשתמשים לבחור סיסמאות שדלפו בפריצות
+ידועות. הוא כבוי כברירת מחדל ואי אפשר להדליק אותו מהקוד — רק בלחיצה בדשבורד.
+
+---
+
+## הערות והגבלות ידועות
+
+- **אימות אימייל** פעיל. Supabase בודק שכתובת האימייל אמיתית ודוחה דומיינים מומצאים,
+  ושירות המייל המובנה מוגבל למספר קטן של הודעות בשעה. להדגמה — עדיף להשתמש
+  בחשבונות הדמו, שמאומתים מראש.
+- **התמונות בנתוני הדמו** הן קבצי SVG מקומיים מתוך `public/placeholders/`. תמונות
+  שמעלים דרך האתר נשמרות באמת ב-Supabase Storage.
+- **מנוע ההתאמות רץ בתוך הבקשה**, בזיכרון. זה מתאים לסדר גודל של אלפי מודעות. אם
+  המערכת תגדל, השלב הבא הוא להריץ אותו ברקע.
+
+## מה לא נבנה (מחוץ לתחום ה-MVP)
+
+תשלומים ומנויים, אימות בעלות בטאבו, הערכת שווי אוטומטית, אפליקציה נייטיב, התראות
+אימייל או פוש, ופאנל ניהול. נקודות ההרחבה מסומנות בקוד בהערות `TODO`.

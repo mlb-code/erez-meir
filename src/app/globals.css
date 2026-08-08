@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-heebo), ui-sans-serif, system-ui, sans-serif;
+
+  /* צבע המותג — טורקיז עמוק */
+  --color-brand-50: #eefbf8;
+  --color-brand-100: #d3f4ee;
+  --color-brand-200: #abe9df;
+  --color-brand-300: #74d7cb;
+  --color-brand-400: #3dbcb0;
+  --color-brand-500: #23a096;
+  --color-brand-600: #16807a;
+  --color-brand-700: #156762;
+  --color-brand-800: #155250;
+  --color-brand-900: #144543;
+  --color-brand-950: #04292a;
+
+  /* צבע השרשראות — ענבר, כדי להבדיל ויזואלית מהתאמה ישירה */
+  --color-chain-50: #fff9ed;
+  --color-chain-100: #fff1d4;
+  --color-chain-200: #ffdfa8;
+  --color-chain-300: #ffc670;
+  --color-chain-400: #ffa337;
+  --color-chain-500: #fd8710;
+  --color-chain-600: #ee6c06;
+  --color-chain-700: #c55007;
+  --color-chain-800: #9c3f0e;
+  --color-chain-900: #7e360f;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-slate-50);
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* מספרים תמיד נקראים משמאל לימין, גם בתוך טקסט עברי */
+.num {
+  unicode-bidi: isolate;
+  direction: ltr;
+  display: inline-block;
+}
+
+/* טשטוש הדרגתי בקצה של רשימה נגללת אופקית */
+.scroll-fade {
+  scrollbar-width: none;
+}
+.scroll-fade::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

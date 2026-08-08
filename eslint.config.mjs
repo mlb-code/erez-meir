@@ -12,6 +12,14 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    rules: {
+      // תמונות הדירות מגיעות מדלי האחסון של Supabase, שהמארח שלו משתנה בין
+      // סביבות. next/image היה מחייב רשימת מארחים קבועה בקוד, ולכן נעשה כאן
+      // שימוש מכוון ב-<img> רגיל.
+      "@next/next/no-img-element": "off",
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",
