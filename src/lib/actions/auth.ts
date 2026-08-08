@@ -1,9 +1,25 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+
+/**
+ * כתובת הבסיס של האתר, לבניית קישור אימות האימייל.
+ * נגזרת מהבקשה עצמה, כדי שהקוד יעבוד בלי הגדרה ידנית בכל סביבה —
+ * מקומית, ב-Railway, או בכל דומיין עתידי.
+ */
+async function getSiteUrl(): Promise<string> {
+  const headerList = await headers();
+  const host = headerList.get('x-forwarded-host') ?? headerList.get('host');
+  if (host) {
+    const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
+    return `${proto}://${host}`;
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3100';
+}
 
 export type AuthFormState = { error?: string; notice?: string };
 
@@ -43,7 +59,7 @@ export async function signUp(
   }
 
   const supabase = await createClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const siteUrl = await getSiteUrl();
 
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,

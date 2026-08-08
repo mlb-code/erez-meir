@@ -34,9 +34,9 @@ npm install
 cp .env.example .env.local
 ```
 
-ואז לפתוח את `.env.local` ולמלא את שתי השורות הראשונות מתוך הדשבורד של Supabase,
-תחת **Project Settings → API**: את הכתובת (`Project URL`) ואת המפתח הציבורי
-(`publishable key`). את השורה השלישית משאירים כמו שהיא.
+ואז לפתוח את `.env.local` ולמלא שתי שורות מתוך הדשבורד של Supabase, תחת
+**Project Settings → API**: את הכתובת (`Project URL`) ואת המפתח הציבורי
+(`publishable key`). זה הכול.
 
 ---
 
