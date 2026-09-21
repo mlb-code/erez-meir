@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "vitest run",
     "verify:matches": "tsx scripts/verify-matches.mts",
-    "check:e2e": "tsx scripts/e2e-check.mts"
+    "check:e2e": "tsx scripts/e2e-check.mts",
+    "db:run": "tsx scripts/db-run.mts",
+    "db:seed-matches": "tsx scripts/seed-matches.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -23,10 +25,12 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.23",
+    "pg": "^8.23.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.11",
     "typescript": "^5",
