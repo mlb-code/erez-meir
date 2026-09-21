@@ -14,6 +14,9 @@ export const metadata: Metadata = { title: 'האזור האישי' };
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
   draft: 'bg-slate-200 text-slate-700',
+  pending_ownership: 'bg-chain-100 text-chain-800',
+  ownership_rejected: 'bg-red-100 text-red-800',
+  closing: 'bg-brand-100 text-brand-800',
   active: 'bg-emerald-100 text-emerald-800',
   in_negotiation: 'bg-chain-100 text-chain-800',
   swapped: 'bg-brand-100 text-brand-800',
@@ -23,6 +26,9 @@ const STATUS_STYLES: Record<ListingStatus, string> = {
 /** לאיזה סטטוס אפשר לעבור מכל סטטוס. */
 const NEXT_STATUSES: Record<ListingStatus, ListingStatus[]> = {
   draft: [],
+  pending_ownership: [],
+  ownership_rejected: [],
+  closing: ['swapped'],
   active: ['in_negotiation', 'archived'],
   in_negotiation: ['active', 'swapped', 'archived'],
   swapped: ['archived'],

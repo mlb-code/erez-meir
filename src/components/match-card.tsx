@@ -11,7 +11,12 @@ const STATUS_TEXT: Record<EnrichedMatch['status'], { label: string; className: s
     className: 'bg-chain-100 text-chain-800',
   },
   all_interested: { label: 'כולם אישרו', className: 'bg-emerald-100 text-emerald-800' },
+  meeting_confirmed: { label: 'אישור הפגשה נחתם', className: 'bg-emerald-100 text-emerald-800' },
+  in_negotiation: { label: 'במשא ומתן בלעדי', className: 'bg-brand-100 text-brand-800' },
+  closing: { label: 'בסגירה', className: 'bg-brand-100 text-brand-800' },
+  swapped: { label: 'הוחלפה', className: 'bg-brand-200 text-brand-900' },
   dismissed: { label: 'ההתאמה נסגרה', className: 'bg-slate-200 text-slate-600' },
+  expired: { label: 'פג תוקף', className: 'bg-slate-200 text-slate-500' },
 };
 
 export function MatchCard({ match }: { match: EnrichedMatch }) {

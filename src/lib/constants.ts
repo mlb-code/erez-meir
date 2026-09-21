@@ -48,7 +48,10 @@ export const FEATURE_LABELS: Record<PropertyFeature, string> = {
 
 export const STATUS_LABELS: Record<ListingStatus, string> = {
   draft: 'טיוטה',
+  pending_ownership: 'ממתינה לאימות בעלות',
+  ownership_rejected: 'אימות הבעלות נדחה',
   active: 'פעילה',
+  closing: 'בסגירה',
   in_negotiation: 'במשא ומתן',
   swapped: 'הוחלפה',
   archived: 'בארכיון',
