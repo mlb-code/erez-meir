@@ -27,7 +27,9 @@ export type PropertyFeature =
   | 'parking'
   | 'balcony'
   | 'safe_room'
-  | 'renovated';
+  | 'renovated'
+  | 'no_tenant'
+  | 'no_caveats';
 
 export type MatchType = 'direct' | 'chain';
 

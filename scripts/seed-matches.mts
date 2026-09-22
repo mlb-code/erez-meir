@@ -19,22 +19,28 @@ const db = new pg.Client({
 await db.connect();
 
 const { rows } = await db.query(`
-  select l.id, l.city, l.rooms::float, l.size_sqm, l.asking_value::float, l.has_elevator, l.has_parking,
-         l.has_balcony, l.has_safe_room, l.condition, l.wanted_cities, l.wanted_min_rooms::float,
-         l.wanted_max_rooms::float, l.wanted_min_sqm, l.must_haves::text[] as must_haves, l.cash_add_max::float,
-         l.cash_receive_min::float, u.email
-  from public.listings l join auth.users u on u.id = l.owner_id
+  select l.id, l.owner_id, l.asset_type::text as asset_type, l.city, l.neighborhood_id, l.rooms::float, l.size_sqm, l.floor,
+         l.asking_value::float, l.has_elevator, l.has_parking, l.has_balcony, l.has_safe_room, l.condition::text as condition,
+         l.building_year, l.urban_renewal_status::text as urban_renewal_status, l.has_mortgage, l.has_caveats, l.has_liens,
+         l.has_tenant, l.available_from, l.available_until, l.availability_flex_months, l.locked_until,
+         l.wanted_asset_types::text[] as wanted_asset_types, l.wanted_cities, l.wanted_neighborhood_ids::text[] as wanted_neighborhood_ids,
+         l.wanted_min_rooms::float, l.wanted_max_rooms::float, l.wanted_min_sqm, l.wanted_min_floor,
+         l.wanted_value_min::float, l.wanted_value_max::float, l.wanted_available_from, l.wanted_available_until,
+         l.must_haves::text[] as must_haves, l.soft_prefs, l.cash_add_max::float, l.cash_receive_min::float,
+         (p.identity_status = 'verified') as identity_verified, u.email
+  from public.listings l join auth.users u on u.id = l.owner_id join public.profiles p on p.id = l.owner_id
   where l.status = 'active'`);
 
 const emailOf = new Map(rows.map((r) => [r.id, r.email as string]));
-const matches = computeMatches(rows as unknown as MatchableListing[]);
+// הדמו מחשב עד 5 כדי לשמור את השרשרת של 4 (מדיניות התצוגה בייצור: MAX_CHAIN_LENGTH_SHOWN)
+const matches = computeMatches(rows as unknown as MatchableListing[], 5);
 
 await db.query('delete from public.matches');
 for (const m of matches) {
   await db.query(
-    `insert into public.matches (match_type, chain_listing_ids, score) values ($1, $2::uuid[], $3)
-     on conflict (chain_listing_ids) do nothing`,
-    [m.match_type, m.chain_listing_ids, m.score],
+    `insert into public.matches (match_type, chain_listing_ids, score, scores, estimated_close_probability)
+     values ($1, $2::uuid[], $3, $4::jsonb, $5) on conflict (chain_listing_ids) do nothing`,
+    [m.match_type, m.chain_listing_ids, m.score, JSON.stringify(m.scores), m.estimated_close_probability],
   );
 }
 console.log(`התאמות נשמרו: ${matches.length} (${matches.filter(m => m.match_type==='direct').length} ישירות, ${matches.filter(m => m.match_type==='chain').length} שרשראות)`);

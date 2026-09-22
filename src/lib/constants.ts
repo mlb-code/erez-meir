@@ -44,6 +44,8 @@ export const FEATURE_LABELS: Record<PropertyFeature, string> = {
   balcony: 'מרפסת',
   safe_room: 'ממ״ד',
   renovated: 'משופצת',
+  no_tenant: 'ללא שוכר',
+  no_caveats: 'ללא הערות אזהרה',
 };
 
 export const STATUS_LABELS: Record<ListingStatus, string> = {
@@ -58,7 +60,7 @@ export const STATUS_LABELS: Record<ListingStatus, string> = {
 };
 
 export const FEATURE_OPTIONS: { value: PropertyFeature; label: string }[] = (
-  ['elevator', 'parking', 'balcony', 'safe_room', 'renovated'] as const
+  ['elevator', 'parking', 'balcony', 'safe_room', 'renovated', 'no_tenant', 'no_caveats'] as const
 ).map((value) => ({ value, label: FEATURE_LABELS[value] }));
 
 /** ההסבר המשפטי שמופיע בסוף כל התאמה. */

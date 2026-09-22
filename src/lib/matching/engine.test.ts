@@ -5,9 +5,13 @@ import {
   computeMatches,
   describeCycle,
   edgeExists,
+  eligible,
+  estimateCloseProbability,
   findCycles,
   hasFeature,
   scoreCycle,
+  sideScore,
+  timeFit,
   type MatchableListing,
 } from './engine';
 
@@ -249,12 +253,13 @@ describe('scoreCycle — חישוב הציון', () => {
 
     const a = listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'], ...perfect });
     const b = listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], ...perfect });
-    expect(scoreCycle([a, b])).toBe(87); // 50 בסיס + 25 קרבת שווי + 0 עודף + 12 בונוס ישיר
+    // צד: 20 בסיס + 25 קרבת שווי + 0 עודף + 5 זמן (ניטרלי) + 10 רכות (ניטרלי) + 10 נקי משפטית = 70
+    expect(scoreCycle([a, b]).score).toBe(78); // 70 + 8 בונוס ישיר
 
     const c1 = listing({ id: 'c1', city: 'תל אביב', wanted_cities: ['גבעתיים'], ...perfect });
     const c2 = listing({ id: 'c2', city: 'גבעתיים', wanted_cities: ['רעננה'], ...perfect });
     const c3 = listing({ id: 'c3', city: 'רעננה', wanted_cities: ['תל אביב'], ...perfect });
-    expect(scoreCycle([c1, c2, c3])).toBe(69); // אותו דבר, פחות 6 על החוליה הנוספת
+    expect(scoreCycle([c1, c2, c3]).score).toBe(65); // 70 − 5 על החוליה הנוספת
   });
 
   it('23. פער מזומן גדול מוריד את הציון, וכל ציון נשאר בטווח 0–100', () => {
@@ -267,8 +272,8 @@ describe('scoreCycle — חישוב הציון', () => {
       listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], asking_value: 4_900_000 }),
     ];
 
-    expect(scoreCycle(close)).toBeGreaterThan(scoreCycle(far));
-    for (const score of [scoreCycle(close), scoreCycle(far)]) {
+    expect(scoreCycle(close).score).toBeGreaterThan(scoreCycle(far).score);
+    for (const score of [scoreCycle(close).score, scoreCycle(far).score]) {
       expect(score).toBeGreaterThanOrEqual(0);
       expect(score).toBeLessThanOrEqual(100);
     }
@@ -283,7 +288,9 @@ describe('scoreCycle — חישוב הציון', () => {
       listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'], wanted_min_rooms: 3, wanted_min_sqm: 80 }),
       listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], rooms: 4.5, size_sqm: 120, wanted_min_rooms: 3, wanted_min_sqm: 80 }),
     ];
-    expect(scoreCycle(generous)).toBeGreaterThan(scoreCycle(modest));
+    // ב-v2 ציון המעגל הוא החוליה החלשה, ולכן העודף משתקף בציון הצד של א׳ — לא בהכרח בציון המעגל.
+    expect(sideScore(generous[0], generous[1])).toBeGreaterThan(sideScore(modest[0], modest[1]));
+    expect(scoreCycle(generous).scores.a).toBeGreaterThan(scoreCycle(modest).scores.a);
   });
 
   it('25. ההתאמות מוחזרות ממוינות לפי ציון יורד', () => {
@@ -313,5 +320,154 @@ describe('describeCycle — תנועות הכסף בשרשרת', () => {
     expect(steps[1]).toMatchObject({ cash: -300_000 });
     expect(steps[1].from.id).toBe('b');
     expect(steps[1].to.id).toBe('a');
+  });
+});
+
+// ===========================================================================
+//  מנוע v2 — סוג נכס, שכונות, קומה, משפטי, טווח שווי, זמן, נעילה, ציון לכל צד
+// ===========================================================================
+
+describe('v2 — מסננים קשיחים חדשים', () => {
+  const pair = (fromExtra: Partial<MatchableListing>, toExtra: Partial<MatchableListing>) => [
+    listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'], ...fromExtra }),
+    listing({ id: 'b', city: 'הרצליה', ...toExtra }),
+  ] as const;
+
+  it('27. סוג נכס: מי שמחפש דירה לא מקבל חנות, ולהפך', () => {
+    let [a, b] = pair({}, { asset_type: 'shop' });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ wanted_asset_types: ['shop', 'office'] }, { asset_type: 'shop' });
+    expect(edgeExists(a, b)).toBe(true);
+    [a, b] = pair({ wanted_asset_types: ['shop'] }, { asset_type: 'apartment' });
+    expect(edgeExists(a, b)).toBe(false);
+  });
+
+  it('28. שכונות: כשהוגדרו — רק נכס באחת מהן עובר; כשלא — כל העיר', () => {
+    let [a, b] = pair({ wanted_neighborhood_ids: ['n1', 'n2'] }, { neighborhood_id: 'n3' });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ wanted_neighborhood_ids: ['n1', 'n2'] }, { neighborhood_id: 'n2' });
+    expect(edgeExists(a, b)).toBe(true);
+    [a, b] = pair({ wanted_neighborhood_ids: [] }, { neighborhood_id: 'n9' });
+    expect(edgeExists(a, b)).toBe(true);
+  });
+
+  it('29. לקרקע אין חדרים — מסנן החדרים לא חל עליה', () => {
+    const [a, b] = pair({ wanted_asset_types: ['land'], wanted_min_rooms: 4, wanted_min_sqm: 300 },
+                        { asset_type: 'land', rooms: 0, size_sqm: 500 });
+    expect(edgeExists(a, b)).toBe(true);
+  });
+
+  it('30. קומה מינימלית: קומת קרקע (null) נחשבת 0', () => {
+    let [a, b] = pair({ wanted_min_floor: 2 }, { floor: null });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ wanted_min_floor: 2 }, { floor: 2 });
+    expect(edgeExists(a, b)).toBe(true);
+  });
+
+  it('31. "ללא שוכר" ו"ללא הערות אזהרה" הם תנאי סף', () => {
+    let [a, b] = pair({ must_haves: ['no_tenant'] }, { has_tenant: true });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ must_haves: ['no_caveats'] }, { has_liens: true });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ must_haves: ['no_tenant', 'no_caveats'] }, { has_tenant: false, has_caveats: false });
+    expect(edgeExists(a, b)).toBe(true);
+  });
+
+  it('32. טווח שווי מבוקש נבדק בנוסף לגמישות המזומן', () => {
+    let [a, b] = pair({ wanted_value_max: 3_500_000, cash_add_max: 1_000_000 }, { asking_value: 4_000_000 });
+    expect(edgeExists(a, b)).toBe(false);          // המזומן מרשה, הטווח לא
+    [a, b] = pair({ wanted_value_min: 3_000_000 }, { asking_value: 2_900_000 });
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair({ wanted_value_min: 3_000_000, wanted_value_max: 4_500_000, cash_add_max: 500_000 }, { asking_value: 4_400_000 });
+    expect(edgeExists(a, b)).toBe(true);
+  });
+
+  it('33. זמן: חלונות שלא נחפפים חוסמים; גמישות של הנכס פותרת; חלון חסר = לא נבדק', () => {
+    const want = { wanted_available_from: '2027-01-01', wanted_available_until: '2027-03-31' };
+    let [a, b] = pair(want, { available_from: '2027-05-01', available_until: '2027-06-30' });
+    expect(timeFit(a, b)).toBe(0);
+    expect(edgeExists(a, b)).toBe(false);
+    [a, b] = pair(want, { available_from: '2027-05-01', available_until: '2027-06-30', availability_flex_months: 2 });
+    expect(edgeExists(a, b)).toBe(true);
+    [a, b] = pair(want, {});
+    expect(timeFit(a, b)).toBeNull();
+    expect(edgeExists(a, b)).toBe(true);
+    [a, b] = pair(want, { available_from: '2027-01-01', available_until: '2027-03-31' });
+    expect(timeFit(a, b)).toBe(1);
+  });
+
+  it('34. שני נכסים של אותו בעלים לא מתאימים זה לזה', () => {
+    const [a, b] = pair({ owner_id: 'u1' }, { owner_id: 'u1', wanted_cities: ['תל אביב'] });
+    expect(edgeExists(a, b)).toBe(false);
+    expect(computeMatches([a, b])).toHaveLength(0);
+  });
+
+  it('35. נכס נעול (במו"מ בלעדי) לא משתתף במנוע; נעילה שפגה — כן', () => {
+    const future = new Date(Date.now() + 7 * 86_400_000).toISOString();
+    const past = new Date(Date.now() - 86_400_000).toISOString();
+    const a = listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'] });
+    expect(eligible([a, listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], locked_until: future })])).toHaveLength(1);
+    expect(computeMatches([a, listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], locked_until: future })])).toHaveLength(0);
+    expect(computeMatches([a, listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], locked_until: past })])).toHaveLength(1);
+  });
+});
+
+describe('v2 — ציון לכל צד והסתברות סגירה', () => {
+  it('36. ההתאמה א-סימטרית: לכל צד ציון משלו, וציון המעגל הוא החוליה החלשה', () => {
+    const a = listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'], asking_value: 4_000_000, cash_add_max: 1_000_000,
+      soft_prefs: { parking: 3, elevator: 3 } });
+    const b = listing({ id: 'b', city: 'הרצליה', wanted_cities: ['תל אביב'], asking_value: 4_500_000,
+      has_parking: false, has_elevator: false, has_tenant: true });
+    const m = computeMatches([a, b])[0];
+    expect(m.scores.a).toBeLessThan(m.scores.b);           // א׳ מקבל דירה בלי מה שביקש, עם שוכר, ומשלם
+    expect(m.score).toBe(Math.min(m.scores.a, m.scores.b) + 8);
+  });
+
+  it('37. העדפות רכות שמתקיימות מעלות את הציון, ושלא מתקיימות מורידות', () => {
+    const base = listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'] });
+    const hit = listing({ id: 'b', city: 'הרצליה', has_balcony: true, building_year: 2024 });
+    const miss = listing({ id: 'c', city: 'הרצליה', has_balcony: false, building_year: 1970 });
+    const neutral = sideScore(base, hit);
+    const wants = { ...base, soft_prefs: { balcony: 3, new_building: 2 } as const };
+    expect(sideScore(wants, hit)).toBeGreaterThan(neutral);
+    expect(sideScore(wants, miss)).toBeLessThan(neutral);
+  });
+
+  it('38. ניקיון משפטי: משכנתא קנס קטן, עיקול קנס גדול', () => {
+    const a = listing({ id: 'a', city: 'תל אביב', wanted_cities: ['הרצליה'] });
+    const clean = sideScore(a, listing({ id: 'b', city: 'הרצליה' }));
+    const mortgage = sideScore(a, listing({ id: 'b', city: 'הרצליה', has_mortgage: true }));
+    const liens = sideScore(a, listing({ id: 'b', city: 'הרצליה', has_liens: true }));
+    expect(clean - mortgage).toBe(2);
+    expect(clean - liens).toBe(8);
+  });
+
+  it('39. הסתברות סגירה: בטווח, יורדת עם אורך המעגל, עולה כשכולם מאומתים', () => {
+    const mk = (id: string, city: string, want: string, verified = false) =>
+      listing({ id, city, wanted_cities: [want], identity_verified: verified });
+    const direct = computeMatches([mk('a', 'תל אביב', 'הרצליה'), mk('b', 'הרצליה', 'תל אביב')])[0];
+    const chain = computeMatches([mk('a', 'תל אביב', 'הרצליה'), mk('b', 'הרצליה', 'רעננה'), mk('c', 'רעננה', 'תל אביב')])[0];
+    const verified = computeMatches([mk('a', 'תל אביב', 'הרצליה', true), mk('b', 'הרצליה', 'תל אביב', true)])[0];
+    for (const m of [direct, chain, verified]) {
+      expect(m.estimated_close_probability).toBeGreaterThanOrEqual(0.02);
+      expect(m.estimated_close_probability).toBeLessThanOrEqual(0.95);
+    }
+    expect(chain.estimated_close_probability).toBeLessThan(direct.estimated_close_probability);
+    expect(verified.estimated_close_probability).toBeGreaterThan(direct.estimated_close_probability);
+    expect(estimateCloseProbability([], { x: 100 })).toBeLessThanOrEqual(0.95);
+  });
+
+  it('40. הסינון המקדים לפי עיר לא מפספס מעגל בין ערים שונות', () => {
+    const l = [
+      listing({ id: 'a', city: 'תל אביב', wanted_cities: ['גבעתיים'] }),
+      listing({ id: 'b', city: 'גבעתיים', wanted_cities: ['פתח תקווה'] }),
+      listing({ id: 'c', city: 'פתח תקווה', wanted_cities: ['ראשון לציון'] }),
+      listing({ id: 'd', city: 'ראשון לציון', wanted_cities: ['תל אביב'] }),
+      listing({ id: 'e', city: 'רעננה', wanted_cities: ['רעננה'] }),   // רעש — אף אחד לא רוצה
+    ];
+    const m = computeMatches(l);
+    expect(m).toHaveLength(1);
+    expect(m[0].chain_listing_ids).toEqual(['a', 'b', 'c', 'd']);
+    expect(Object.keys(m[0].scores).sort()).toEqual(['a', 'b', 'c', 'd']);
   });
 });
