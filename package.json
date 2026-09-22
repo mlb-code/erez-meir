@@ -14,7 +14,8 @@
     "db:seed-matches": "tsx scripts/seed-matches.mts",
     "db:migrate": "tsx scripts/db-migrate.mts",
     "check:schema": "tsx scripts/check-schema.mts",
-    "matching:daily": "tsx scripts/run-matching.mts"
+    "matching:daily": "tsx scripts/run-matching.mts",
+    "scanner:daily": "tsx scripts/run-scanner.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
