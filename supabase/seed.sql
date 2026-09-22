@@ -32,7 +32,7 @@ insert into seed_rows values
  array['תל אביב'],3,3.5,70,array[]::public.property_feature[],0,200000,3,4),
 
 -- ---------- התאמה ישירה 2 ----------
-('avi@demo.swap.co.il','אבי טולדנו','054-3388201','רמת גן','שכונת הבורסה','ז׳בוטינסקי',4,95,7,12,true,false,true,true,2012,'maintained','none',3200000,
+('avi@demo.swap.co.il','אבי טולדנו','054-3388201','רמת גן','הבורסה','ז׳בוטינסקי',4,95,7,12,true,false,true,true,2012,'maintained','none',3200000,
  'ארבעה חדרים בבניין חדש יחסית באזור הבורסה, נוף פתוח מקומה שביעית, ממ״ד ומעלית. חסרה לנו חניה — ולכן מחפשים גבעתיים עם חניה.',
  array['גבעתיים'],3,4,80,array['parking']::public.property_feature[],300000,0,5,6),
 
@@ -41,7 +41,7 @@ insert into seed_rows values
  array['רמת גן'],4,5,90,array['elevator']::public.property_feature[],0,100000,7,8),
 
 -- ---------- התאמה ישירה 3 ----------
-('shira@demo.swap.co.il','שירה בן־עמי','050-6642318','רעננה','קרית שרת','אחוזה',5,130,4,6,true,true,true,true,2010,'maintained','none',3900000,
+('shira@demo.swap.co.il','שירה בן־עמי','050-6642318','רעננה','קריית שרת','אחוזה',5,130,4,6,true,true,true,true,2010,'maintained','none',3900000,
  'חמישה חדרים גדולים ברעננה, שתי מרפסות, ממ״ד, חניה כפולה ומעלית. שקט ומשפחתי. אנחנו רוצים לחזור לעיר הגדולה גם במחיר של דירה קטנה יותר.',
  array['תל אביב'],3,4,75,array['balcony']::public.property_feature[],0,0,9,10),
 
@@ -58,7 +58,7 @@ insert into seed_rows values
  'ארבעה וחצי חדרים כמעט חדשים בנווה ים, ממ״ד, מרפסת שמש, חניה תת־קרקעית ומחסן. אנחנו רוצים להתקרב לעבודה ברמת גן.',
  array['רמת גן'],3,4,85,array['elevator']::public.property_feature[],500000,0,15,16),
 
-('roni@demo.swap.co.il','רוני אלפסי','054-6635902','רמת גן','שכונת הראשונים','ביאליק',3.5,90,4,6,true,false,true,false,1996,'maintained','none',3300000,
+('roni@demo.swap.co.il','רוני אלפסי','054-6635902','רמת גן','הראשונים','ביאליק',3.5,90,4,6,true,false,true,false,1996,'maintained','none',3300000,
  'שלושה וחצי חדרים בשכונת הראשונים, מרפסת, מעלית ובניין שמור. אני מחפשת דירה גדולה בפתח תקווה עם חניה — ומצפה להשלמה כספית משמעותית.',
  array['פתח תקווה'],4,5,95,array['parking']::public.property_feature[],0,500000,17,18),
 
@@ -84,7 +84,7 @@ insert into seed_rows values
  'ארבעה חדרים בלב גבעתיים, מעלית וחניה, קומה שישית עם אוויר. אנחנו משפחה גדולה ומחפשים חמישה חדרים עם ממ״ד בפתח תקווה, עם השלמה כספית.',
  array['פתח תקווה'],5,6,120,array['parking','safe_room']::public.property_feature[],0,400000,27,28),
 
-('hadas@demo.swap.co.il','הדס אלמוג','050-3392265','פתח תקווה','אם המושבות','ברקת',5,125,4,10,true,true,true,true,2013,'maintained','none',3400000,
+('hadas@demo.swap.co.il','הדס אלמוג','050-3392265','פתח תקווה','אם המושבות החדשה','ברקת',5,125,4,10,true,true,true,true,2013,'maintained','none',3400000,
  'חמישה חדרים באם המושבות החדשה, ממ״ד, מרפסת שמש, חניה תת־קרקעית ומעלית. מחפשת להתקרב לראשון לציון בגלל העבודה.',
  array['ראשון לציון'],4,5,105,array['elevator']::public.property_feature[],300000,0,29,30),
 
@@ -121,8 +121,8 @@ insert into seed_rows values
  'שלושה וחצי חדרים משופצים בנחלת יהודה, מרפסת, מעלית וחניה. מחפש דירה קטנה בתל אביב או רמת גן — מוכן להוסיף מכיסי.',
  array['תל אביב','רמת גן'],2,3,45,array[]::public.property_feature[],900000,0,45,46),
 
-('dana@demo.swap.co.il','דנה כרמלי','058-3307719','גבעתיים','גבעת התחמושת','כורזין',4.5,105,5,7,true,true,true,true,2015,'new','none',4300000,
- 'ארבעה וחצי חדרים בבניין חדש בגבעת התחמושת, ממ״ד, מרפסת, חניה תת־קרקעית ומעלית. מחפשת אוויר ושקט בהרצליה או רמת השרון.',
+('dana@demo.swap.co.il','דנה כרמלי','058-3307719','גבעתיים','כורזין','כורזין',4.5,105,5,7,true,true,true,true,2015,'new','none',4300000,
+ 'ארבעה וחצי חדרים בבניין חדש במתחם כורזין, ממ״ד, מרפסת, חניה תת־קרקעית ומעלית. מחפשת אוויר ושקט בהרצליה או רמת השרון.',
  array['הרצליה','רמת השרון'],4,5.5,110,array['safe_room','parking']::public.property_feature[],1000000,0,47,48),
 
 ('boaz@demo.swap.co.il','בועז נוימן','054-9925604','תל אביב','הצפון הישן','ארלוזורוב',4,105,4,6,true,true,true,true,2007,'renovated','none',7000000,
@@ -169,6 +169,15 @@ select
   s.must_haves, s.cash_add_max, s.cash_receive_min
 from seed_rows s
 join auth.users u on u.email = s.email;
+
+-- קישור לשכונה מהטבלה הסגורה (public.neighborhoods, מיגרציה 005) לפי (עיר, שם).
+-- אם הטבלה עדיין ריקה — אין פעולה; מיגרציה 006 משלימה את הקישור.
+update public.listings l
+set neighborhood_id = n.id
+from public.neighborhoods n
+where l.neighborhood_id is null
+  and n.city = l.city
+  and n.name = btrim(l.neighborhood);
 
 -- שתי תמונות דמו לכל מודעה (קבצי SVG מקומיים מתוך public/placeholders)
 insert into public.listing_photos (listing_id, storage_path, sort_order)
