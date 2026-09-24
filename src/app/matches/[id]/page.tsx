@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Chat } from './chat';
 import { ChainDiagram } from '@/components/chain-diagram';
+import { Card, EmptyState, PageHeader } from '@/components/ui';
 import { LEGAL_DISCLAIMER, isOpenMatchState } from '@/lib/constants';
 import { getMatchById } from '@/lib/data/matches';
 import { createClient, getCurrentUser } from '@/lib/supabase/server';
@@ -37,22 +37,20 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <Link href="/matches" className="text-sm font-medium text-brand-700 hover:underline">
-        → חזרה להתאמות
-      </Link>
+    <div className="mx-auto max-w-3xl px-gutter py-8">
+      <PageHeader
+        title={match.match_type === 'direct' ? 'החלפה ישירה' : `שרשרת של ${match.totalCount}`}
+        backHref="/matches"
+        backLabel="חזרה להתאמות"
+      />
 
-      <h1 className="mt-4 text-2xl font-extrabold text-ink-900">
-        {match.match_type === 'direct' ? 'החלפה ישירה' : `שרשרת של ${match.totalCount}`}
-      </h1>
-
-      <section className="mt-5 rounded-2xl border border-ink-200 bg-white p-4">
-        <h2 className="mb-3 text-sm font-bold text-ink-500">מסלול ההחלפה</h2>
+      <Card as="section" className="mt-5">
+        <h2 className="mb-3 text-caption font-bold text-ink-500">מסלול ההחלפה</h2>
         <ChainDiagram participants={match.participants} steps={match.steps} />
-      </section>
+      </Card>
 
       <section className="mt-6">
-        <h2 className="mb-3 text-lg font-extrabold text-ink-900">
+        <h2 className="mb-3 text-heading text-ink-900">
           {isOpen ? 'צ׳אט משותף' : 'הצ׳אט עדיין סגור'}
         </h2>
 
@@ -64,17 +62,29 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
             initialMessages={messages}
           />
         ) : (
-          <p className="rounded-2xl border border-dashed border-ink-300 bg-white p-8 text-center text-ink-500">
-            הצ׳אט הקבוצתי נפתח רק אחרי שכל המשתתפים במעגל סימנו &quot;מעוניין&quot;. כרגע אישרו{' '}
-            <span className="font-bold">
-              {match.interestedCount} מתוך {match.totalCount}
-            </span>
-            .
-          </p>
+          <EmptyState
+            title="הצ׳אט הקבוצתי עדיין נעול"
+            description={`הוא נפתח רק אחרי שכל המשתתפים במעגל סימנו "מעוניין". כרגע אישרו ${match.interestedCount} מתוך ${match.totalCount}.`}
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="5" y="11" width="14" height="9" rx="2" />
+                <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+              </svg>
+            }
+          />
         )}
       </section>
 
-      <p className="mt-6 rounded-xl bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
+      <p className="mt-6 rounded-field bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
         {LEGAL_DISCLAIMER}
       </p>
     </div>

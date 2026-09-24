@@ -14,7 +14,7 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      className="group flex flex-col overflow-hidden rounded-card border border-line bg-surface shadow-card transition-shadow hover:shadow-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
     >
       <div className="relative aspect-16/10 bg-ink-100">
         {cover ? (
@@ -25,20 +25,20 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-ink-400">
+          <div className="flex h-full items-center justify-center text-caption text-ink-400">
             ללא תמונה
           </div>
         )}
-        <span className="absolute bottom-2 right-2 rounded-lg bg-ink-900/80 px-2.5 py-1 text-sm font-bold text-white">
+        <span className="num absolute right-2 bottom-2 rounded-chip bg-ink-900/80 px-2.5 py-1 text-caption font-bold text-white">
           {formatCurrency(listing.asking_value)}
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-base font-bold text-ink-900">
+        <h3 className="text-body font-bold text-ink-900">
           {formatRooms(listing.rooms)} ב{listing.city}
         </h3>
-        <p className="mt-0.5 text-sm text-ink-500">
+        <p className="mt-0.5 text-caption text-ink-500">
           {listing.neighborhood ?? 'ללא שכונה'} · {listing.size_sqm} מ״ר
           {listing.floor !== null && ` · קומה ${listing.floor}`}
         </p>
@@ -48,7 +48,7 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
             {features.map((feature) => (
               <li
                 key={feature}
-                className="rounded-md bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600"
+                className="rounded-chip bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600"
               >
                 {feature}
               </li>
@@ -57,9 +57,9 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
         )}
 
         {/* זה מה שמבדיל את הלוח הזה מלוח מודעות רגיל */}
-        <div className="mt-4 flex-1 rounded-xl bg-brand-50 p-3">
+        <div className="mt-4 flex-1 rounded-field bg-brand-50 p-3">
           <p className="text-xs font-bold text-brand-800">מחפש בתמורה</p>
-          <p className="mt-1 text-sm leading-relaxed text-brand-900">
+          <p className="mt-1 text-caption leading-relaxed text-brand-900">
             {describeWantedSummary(listing)}
           </p>
           <p className="mt-1.5 text-xs text-brand-700">{describeCashFlexibility(listing)}</p>

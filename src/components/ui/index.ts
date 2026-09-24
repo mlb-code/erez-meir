@@ -17,7 +17,7 @@ export { cx } from './cx';
 export { EmptyState } from './empty-state';
 export { CONTROL_BASE, CONTROL_HEIGHT, controlTone, type FieldProps } from './field';
 export { Input, type InputProps } from './input';
-export { PageHeader } from './page-header';
+export { BackLink, PageHeader } from './page-header';
 export { Select, type SelectProps } from './select';
 export { Skeleton, SkeletonCard, SkeletonText } from './skeleton';
 export { SubmitButton } from './submit-button';

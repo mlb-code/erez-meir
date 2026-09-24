@@ -17,9 +17,9 @@ export default async function LoginPage({
   const { redirect: redirectTo } = await searchParams;
 
   return (
-    <div className="mx-auto w-full max-w-md px-4 py-10 sm:py-16">
-      <h1 className="text-2xl font-extrabold text-ink-900">התחברות</h1>
-      <p className="mt-2 text-sm text-ink-600">
+    <div className="mx-auto w-full max-w-md px-gutter py-10 sm:py-16">
+      <h1 className="text-title text-ink-900">התחברות</h1>
+      <p className="mt-2 text-caption text-ink-600">
         עוד אין לך חשבון?{' '}
         <Link href="/signup" className="font-semibold text-brand-700 hover:underline">
           להרשמה

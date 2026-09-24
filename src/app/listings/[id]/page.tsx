@@ -1,8 +1,13 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PhotoGallery } from '@/components/photo-gallery';
-import { CONDITION_LABELS, FEATURE_LABELS, LEGAL_DISCLAIMER, URBAN_RENEWAL_LABELS } from '@/lib/constants';
+import { BackLink, Badge, Button, ButtonLink, Card } from '@/components/ui';
+import {
+  CONDITION_LABELS,
+  FEATURE_LABELS,
+  LEGAL_DISCLAIMER,
+  URBAN_RENEWAL_LABELS,
+} from '@/lib/constants';
 import { formatCurrency, formatCurrencyExact, formatRooms } from '@/lib/format';
 import {
   describeAddress,
@@ -68,10 +73,8 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
   ];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <Link href="/listings" className="text-sm font-medium text-brand-700 hover:underline">
-        → חזרה ללוח ההחלפות
-      </Link>
+    <div className="mx-auto max-w-4xl px-gutter py-8">
+      <BackLink href="/listings">חזרה ללוח ההחלפות</BackLink>
 
       <div className="mt-4">
         <PhotoGallery
@@ -82,24 +85,22 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
       <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">
+          <h1 className="text-title text-ink-900">
             {formatRooms(listing.rooms)} ב{listing.city}
           </h1>
-          <p className="mt-1 text-ink-500">{describeAddress(listing)}</p>
+          <p className="mt-1 text-body text-ink-500">{describeAddress(listing)}</p>
         </div>
         <div className="text-left">
-          <p className="text-2xl font-extrabold text-brand-700">
-            {formatCurrency(listing.asking_value)}
-          </p>
-          <p className="text-xs text-ink-500">{formatCurrencyExact(listing.asking_value)}</p>
+          <p className="num text-title text-brand-700">{formatCurrency(listing.asking_value)}</p>
+          <p className="num text-xs text-ink-500">{formatCurrencyExact(listing.asking_value)}</p>
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink-200 bg-ink-200 sm:grid-cols-3">
+      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-3">
         {specs.map((spec) => (
-          <div key={spec.label} className="bg-white p-4">
+          <div key={spec.label} className="bg-surface p-4">
             <dt className="text-xs font-semibold text-ink-500">{spec.label}</dt>
-            <dd className="mt-1 text-sm font-bold text-ink-900">{spec.value}</dd>
+            <dd className="mt-1 text-caption font-bold text-ink-900">{spec.value}</dd>
           </div>
         ))}
       </dl>
@@ -107,11 +108,10 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       {features.length > 0 && (
         <ul className="mt-4 flex flex-wrap gap-2">
           {features.map((feature) => (
-            <li
-              key={feature}
-              className="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm font-medium text-ink-700"
-            >
-              {feature}
+            <li key={feature}>
+              <Badge tone="neutral" size="md">
+                {feature}
+              </Badge>
             </li>
           ))}
         </ul>
@@ -119,16 +119,16 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
       {listing.description && (
         <section className="mt-6">
-          <h2 className="text-lg font-bold text-ink-900">על הדירה</h2>
-          <p className="mt-2 leading-relaxed whitespace-pre-line text-ink-700">
+          <h2 className="text-heading text-ink-900">על הדירה</h2>
+          <p className="mt-2 text-body leading-relaxed whitespace-pre-line text-ink-700">
             {listing.description}
           </p>
         </section>
       )}
 
       {/* הבלוק שמבדיל את הפלטפורמה — מה הבעלים רוצה לקבל בתמורה */}
-      <section className="mt-8 rounded-2xl border-2 border-brand-200 bg-brand-50 p-5">
-        <h2 className="text-lg font-extrabold text-brand-900">מה הבעלים מחפש בתמורה</h2>
+      <Card as="section" tone="brand" padding="lg" className="mt-8 border-2">
+        <h2 className="text-heading text-brand-900">מה הבעלים מחפש בתמורה</h2>
 
         <dl className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
@@ -157,64 +157,54 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
           </div>
         </dl>
 
-        <p className="mt-4 rounded-xl bg-white/70 px-4 py-3 text-sm font-semibold text-brand-900">
+        <p className="mt-4 rounded-field bg-surface/70 px-4 py-3 text-caption font-semibold text-brand-900">
           גמישות מזומן: {describeCashFlexibility(listing)}
         </p>
-      </section>
+      </Card>
 
       {/* קריאה לפעולה */}
       <section className="mt-6">
         {isMine ? (
-          <div className="rounded-2xl border border-ink-200 bg-white p-5">
-            <p className="font-semibold text-ink-800">זו המודעה שלך.</p>
-            <Link
-              href="/account"
-              className="mt-3 inline-block rounded-xl bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-700"
-            >
+          <Card padding="lg">
+            <p className="text-body font-semibold text-ink-800">זו המודעה שלך.</p>
+            <ButtonLink href="/account" variant="secondary" className="mt-3">
               לעריכת המודעה
-            </Link>
-          </div>
+            </ButtonLink>
+          </Card>
         ) : !user ? (
-          <div className="rounded-2xl border border-ink-200 bg-white p-5">
-            <p className="text-ink-700">
+          <Card padding="lg">
+            <p className="text-body text-ink-700">
               כדי לבדוק אם הדירה שלך מתאימה להחלפה הזו צריך להתחבר ולפרסם מודעה.
             </p>
-            <Link
-              href={`/login?redirect=/listings/${listing.id}`}
-              className="mt-3 inline-block rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-            >
+            <ButtonLink href={`/login?redirect=/listings/${listing.id}`} className="mt-3">
               יש לי דירה שמתאימה
-            </Link>
-          </div>
+            </ButtonLink>
+          </Card>
         ) : !hasActiveListing ? (
-          <div className="rounded-2xl border border-ink-200 bg-white p-5">
-            <p className="text-ink-700">
+          <Card padding="lg">
+            <p className="text-body text-ink-700">
               כדי להיכנס למעגלי ההחלפה צריך שתהיה לך מודעה פעילה משלך.
             </p>
-            <Link
-              href="/new"
-              className="mt-3 inline-block rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-            >
+            <ButtonLink href="/new" className="mt-3">
               לפרסום המודעה שלי
-            </Link>
-          </div>
+            </ButtonLink>
+          </Card>
         ) : (
-          <form action={findMatchWith} className="rounded-2xl border border-ink-200 bg-white p-5">
-            <input type="hidden" name="listing_id" value={listing.id} />
-            <p className="text-ink-700">
-              נבדוק אם יש בין הדירות שלכם החלפה ישירה, או מעגל שכולל עוד בעלי דירות.
-            </p>
-            <button
-              type="submit"
-              className="mt-3 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-            >
-              יש לי דירה שמתאימה
-            </button>
-          </form>
+          <Card padding="lg">
+            <form action={findMatchWith}>
+              <input type="hidden" name="listing_id" value={listing.id} />
+              <p className="text-body text-ink-700">
+                נבדוק אם יש בין הדירה שלך לדירה הזו החלפה ישירה, או מעגל שכולל עוד בעלי דירות.
+              </p>
+              <Button type="submit" className="mt-3">
+                יש לי דירה שמתאימה
+              </Button>
+            </form>
+          </Card>
         )}
       </section>
 
-      <p className="mt-6 rounded-xl bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
+      <p className="mt-6 rounded-field bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
         {LEGAL_DISCLAIMER}
       </p>
     </div>

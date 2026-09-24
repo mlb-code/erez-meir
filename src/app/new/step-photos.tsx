@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
-import { FormAlert } from '@/components/form';
+import { ButtonLink, FormAlert } from '@/components/ui';
 import { photoUrl } from '@/lib/format';
 import { createClient } from '@/lib/supabase/client';
 import type { ListingPhoto } from '@/lib/types';
@@ -98,12 +97,12 @@ export function StepPhotos({
       <FormAlert error={error} />
 
       <div>
-        <p className="text-sm text-ink-600">
+        <p className="text-caption text-ink-600">
           אפשר להעלות עד {MAX_PHOTOS} תמונות. התמונה הראשונה היא זו שתופיע בלוח.
         </p>
 
         <label
-          className={`mt-3 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-300 bg-white px-6 py-10 text-center transition-colors hover:border-brand-400 hover:bg-brand-50 ${
+          className={`mt-3 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed border-line-strong bg-surface px-6 py-10 text-center transition-colors hover:border-brand-400 hover:bg-brand-50 ${
             busy || remaining <= 0 ? 'pointer-events-none opacity-50' : ''
           }`}
         >
@@ -111,7 +110,7 @@ export function StepPhotos({
             <path d="M12 16V4m0 0L8 8m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" strokeLinecap="round" />
           </svg>
-          <span className="text-sm font-semibold text-ink-700">
+          <span className="text-caption font-semibold text-ink-700">
             {busy ? 'מעלה…' : remaining > 0 ? 'בחירת תמונות מהמכשיר' : 'הגעת למקסימום התמונות'}
           </span>
           <span className="num text-xs text-ink-500">{photos.length} / {MAX_PHOTOS}</span>
@@ -130,14 +129,14 @@ export function StepPhotos({
       {photos.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((photo, index) => (
-            <li key={photo.id} className="relative overflow-hidden rounded-xl border border-ink-200">
+            <li key={photo.id} className="relative overflow-hidden rounded-field border border-line">
               <img
                 src={photoUrl(photo.storage_path)}
                 alt=""
                 className="aspect-4/3 w-full object-cover"
               />
               {index === 0 && (
-                <span className="absolute top-2 right-2 rounded-md bg-brand-600 px-2 py-0.5 text-xs font-bold text-white">
+                <span className="absolute top-2 right-2 rounded-chip bg-brand-600 px-2 py-0.5 text-xs font-bold text-white">
                   ראשית
                 </span>
               )}
@@ -146,7 +145,7 @@ export function StepPhotos({
                 onClick={() => removePhoto(photo)}
                 disabled={busy}
                 aria-label="מחיקת התמונה"
-                className="absolute bottom-2 left-2 rounded-lg bg-white/90 px-2.5 py-1 text-xs font-semibold text-danger-700 hover:bg-white"
+                className="absolute bottom-2 left-2 rounded-chip bg-surface/90 px-2.5 py-1 text-xs font-semibold text-danger-700 transition-colors hover:bg-surface disabled:opacity-50"
               >
                 מחיקה
               </button>
@@ -156,18 +155,16 @@ export function StepPhotos({
       )}
 
       <div className="flex flex-wrap gap-3">
-        <Link
+        <ButtonLink
           href={`/new?id=${listingId}&step=3`}
-          className="flex-1 rounded-xl bg-brand-600 px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-brand-700"
+          size="lg"
+          className="flex-1"
         >
           המשך לשווי המבוקש
-        </Link>
-        <Link
-          href={`/new?id=${listingId}&step=1`}
-          className="rounded-xl border border-ink-300 bg-white px-4 py-3 text-center text-base font-semibold text-ink-700 hover:bg-ink-50"
-        >
+        </ButtonLink>
+        <ButtonLink href={`/new?id=${listingId}&step=1`} variant="secondary" size="lg">
           חזרה
-        </Link>
+        </ButtonLink>
       </div>
     </div>
   );

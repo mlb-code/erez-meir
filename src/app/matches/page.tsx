@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { MatchCard } from '@/components/match-card';
+import { Alert, Badge, Button, ButtonLink, Card, EmptyState, PageHeader, cx } from '@/components/ui';
 import { refreshMatches } from '@/lib/actions/matching';
 import { getMyMatches } from '@/lib/data/matches';
 import { getMyListings } from '@/lib/data/listings';
@@ -36,57 +37,63 @@ export default async function MatchesPage({
     );
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">ההתאמות שלי</h1>
-          <p className="mt-2 max-w-xl text-ink-600">
-            כאן מופיעות ההחלפות שהמערכת מצאה — גם כאלה שמערבות שלושה וארבעה בעלי דירות.
-          </p>
-        </div>
-        <form action={refreshMatches}>
-          <button
-            type="submit"
-            className="rounded-xl border border-ink-300 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
-          >
-            חיפוש התאמות מחדש
-          </button>
-        </form>
-      </header>
+    <div className="mx-auto max-w-3xl px-gutter py-8">
+      <PageHeader
+        title="ההתאמות שלי"
+        description="כאן מופיעות ההחלפות שהמערכת מצאה — גם כאלה שמערבות שלושה וארבעה בעלי דירות."
+        actions={
+          <form action={refreshMatches}>
+            <Button type="submit" variant="secondary">
+              חיפוש התאמות מחדש
+            </Button>
+          </form>
+        }
+      />
 
       {!hasActiveListing && (
-        <div className="mt-6 rounded-2xl border border-dashed border-brand-300 bg-brand-50 p-5">
-          <p className="font-bold text-brand-900">עוד אין לך מודעה פעילה.</p>
-          <p className="mt-1 text-sm text-brand-800">
+        <Card tone="brand" className="mt-6">
+          <p className="text-body font-bold text-brand-900">עוד אין לך מודעה פעילה.</p>
+          <p className="mt-1 text-caption text-brand-800">
             מעגלי החלפה נבנים בין מודעות. ברגע שתפרסם את הדירה שלך, נוכל לשבץ אותך בהם.
           </p>
-          <Link
-            href="/new"
-            className="mt-3 inline-block rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
-          >
+          <ButtonLink href="/new" className="mt-3">
             לפרסום מודעה
-          </Link>
-        </div>
+          </ButtonLink>
+        </Card>
       )}
 
       {noMatchWithRequested && (
-        <p className="mt-6 rounded-2xl border border-chain-200 bg-chain-50 p-4 text-sm text-chain-900">
+        <Alert tone="warning" className="mt-6">
           בין הדירה שלך לדירה שסימנת אין כרגע החלפה אפשרית — לא ישירה ולא דרך מעגל. ההתאמות
           מתעדכנות בכל פעם שמתפרסמת או מתעדכנת מודעה, אז שווה לבדוק שוב בהמשך.
-        </p>
+        </Alert>
       )}
 
-      <nav className="mt-6 flex gap-2 rounded-xl bg-ink-100 p-1">
-        <TabLink href="/matches" active={activeTab === 'direct'} label="התאמות ישירות" count={direct.length} />
-        <TabLink href="/matches?tab=chains" active={activeTab === 'chains'} label="שרשראות" count={chains.length} />
+      <nav className="mt-6 flex gap-2 rounded-field bg-ink-100 p-1">
+        <TabLink
+          href="/matches"
+          active={activeTab === 'direct'}
+          label="התאמות ישירות"
+          count={direct.length}
+        />
+        <TabLink
+          href="/matches?tab=chains"
+          active={activeTab === 'chains'}
+          label="שרשראות"
+          count={chains.length}
+        />
       </nav>
 
       {visible.length === 0 ? (
-        <p className="mt-6 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
-          {activeTab === 'chains'
-            ? 'עדיין אין שרשראות שאתה חלק מהן. שרשרת נוצרת כשמעגל של שלושה עד חמישה בעלי דירות מסתדר — זה קורה ככל שיש יותר מודעות במערכת.'
-            : 'עדיין אין התאמות ישירות. אפשר לבדוק גם בלשונית השרשראות.'}
-        </p>
+        <EmptyState
+          className="mt-6"
+          title={activeTab === 'chains' ? 'עדיין אין שרשראות שאתה חלק מהן' : 'עדיין אין התאמות ישירות'}
+          description={
+            activeTab === 'chains'
+              ? 'שרשרת נוצרת כשמעגל של שלושה עד חמישה בעלי דירות מסתדר — זה קורה ככל שיש יותר מודעות במערכת.'
+              : 'אפשר לבדוק גם בלשונית השרשראות.'
+          }
+        />
       ) : (
         <div className="mt-6 flex flex-col gap-5">
           {visible.map((match) => (
@@ -112,18 +119,15 @@ function TabLink({
   return (
     <Link
       href={href}
-      className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition-colors ${
-        active ? 'bg-white text-ink-900 shadow-sm' : 'text-ink-500 hover:text-ink-800'
-      }`}
+      className={cx(
+        'flex flex-1 items-center justify-center gap-2 rounded-chip px-4 py-2.5 text-caption font-bold transition-colors',
+        active ? 'bg-surface text-ink-900 shadow-card' : 'text-ink-500 hover:text-ink-800',
+      )}
     >
       {label}
-      <span
-        className={`num rounded-md px-1.5 py-0.5 text-xs ${
-          active ? 'bg-brand-100 text-brand-800' : 'bg-ink-200 text-ink-600'
-        }`}
-      >
+      <Badge tone={active ? 'brand' : 'neutral'} className="num">
         {count}
-      </span>
+      </Badge>
     </Link>
   );
 }

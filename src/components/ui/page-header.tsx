@@ -1,10 +1,42 @@
 import Link from 'next/link';
 import { cx } from './cx';
 
-/**
- * ראש עמוד אחיד: קישור חזרה, כותרת, משפט הסבר ופעולה.
- * החץ פונה ימינה — בעברית זה הכיוון "אחורה".
- */
+/** קישור חזרה. החץ פונה ימינה — בעברית זה הכיוון "אחורה". */
+export function BackLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cx(
+        'inline-flex w-fit items-center gap-1 text-caption font-semibold text-brand-700 hover:text-brand-800 hover:underline',
+        className,
+      )}
+    >
+      <svg
+        viewBox="0 0 20 20"
+        aria-hidden="true"
+        className="h-4 w-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M8 5l5 5-5 5" />
+      </svg>
+      {children}
+    </Link>
+  );
+}
+
+/** ראש עמוד אחיד: קישור חזרה, כותרת, משפט הסבר ופעולה. */
 export function PageHeader({
   title,
   description,
@@ -22,26 +54,7 @@ export function PageHeader({
 }) {
   return (
     <header className={cx('flex flex-col gap-4', className)}>
-      {backHref && (
-        <Link
-          href={backHref}
-          className="inline-flex w-fit items-center gap-1 text-caption font-semibold text-brand-700 hover:text-brand-800 hover:underline"
-        >
-          <svg
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M8 5l5 5-5 5" />
-          </svg>
-          {backLabel ?? 'חזרה'}
-        </Link>
-      )}
+      {backHref && <BackLink href={backHref}>{backLabel ?? 'חזרה'}</BackLink>}
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">

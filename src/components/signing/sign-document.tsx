@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
+import { Alert, Button, Card } from '@/components/ui';
 import { signDocumentAction } from '@/lib/signing/actions';
 import type { DocumentKind } from '@/lib/types';
 
@@ -57,9 +58,9 @@ export function SignDocument({
   }
 
   return (
-    <section className="rounded-2xl border border-ink-200 bg-white">
+    <Card as="section" padding="none">
       <header className="border-b border-ink-100 px-5 py-4">
-        <h2 className="text-lg font-extrabold text-ink-900">{title}</h2>
+        <h2 className="text-heading text-ink-900">{title}</h2>
         <p className="mt-1 text-xs text-ink-500">
           יש לקרוא את המסמך עד סופו. הנוסח שיישמר מזוהה בחתימה דיגיטלית:
           <span className="mr-1 font-mono text-[11px] text-ink-400" dir="ltr">{hash.slice(0, 16)}…</span>
@@ -69,41 +70,51 @@ export function SignDocument({
       <div
         ref={boxRef}
         onScroll={(e) => { const el = e.currentTarget; if (el.scrollTop + el.clientHeight >= el.scrollHeight - 8) setScrolledToEnd(true); }}
-        className="max-h-[50vh] overflow-y-auto px-5 py-4 text-sm leading-relaxed whitespace-pre-wrap text-ink-800"
+        className="max-h-[50vh] overflow-y-auto px-5 py-4 text-caption leading-relaxed whitespace-pre-wrap text-ink-800"
       >
         {text}
       </div>
 
       <footer className="flex flex-col gap-3 border-t border-ink-100 px-5 py-4">
-        {!scrolledToEnd && <p className="text-xs font-semibold text-chain-800">גלול עד סוף המסמך כדי להמשיך.</p>}
-        {hashMismatch && <p className="text-xs font-semibold text-danger-700">הנוסח שהוצג אינו תואם לנוסח בשרת. יש לרענן את הדף.</p>}
+        {!scrolledToEnd && (
+          <p className="text-xs font-semibold text-warning-800">גלול עד סוף המסמך כדי להמשיך.</p>
+        )}
+        {hashMismatch && <Alert tone="error">הנוסח שהוצג אינו תואם לנוסח בשרת. יש לרענן את הדף.</Alert>}
 
-        <label className="flex items-start gap-2 text-sm text-ink-800">
+        <label className="flex items-start gap-2 text-caption text-ink-800">
           <input type="checkbox" checked={agreed} disabled={!scrolledToEnd || !!done} onChange={(e) => setAgreed(e.target.checked)} className="mt-1 h-4 w-4 accent-brand-600" />
           <span>קראתי את המסמך במלואו ואני מסכים לתוכנו.</span>
         </label>
 
         {verificationMethod === 'sms' && !done && (
           <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-ink-700">קוד אימות שנשלח לטלפון</span>
+            <span className="mb-1 block text-caption font-semibold text-ink-700">קוד אימות שנשלח לטלפון</span>
             <input value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} inputMode="numeric" maxLength={6} dir="ltr"
-              className="w-40 rounded-xl border border-ink-300 px-3 py-2 text-left text-base tracking-widest" />
+              className="h-11 w-40 rounded-field border border-line-strong bg-surface px-3 text-left text-body tracking-widest outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
           </label>
         )}
 
-        {error && <p role="alert" className="rounded-xl border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-800">{error}</p>}
+        {error && <Alert tone="error">{error}</Alert>}
 
         {done ? (
-          <p role="status" className="rounded-xl border border-success-200 bg-success-50 px-4 py-3 text-sm font-semibold text-success-900">
-            {done.alreadySigned ? 'המסמך הזה כבר נחתם על ידך.' : 'נחתם. עותק נשמר בחשבונך ויישלח לאימייל.'}
-          </p>
+          <Alert tone="success">
+            {done.alreadySigned
+              ? 'המסמך הזה כבר נחתם על ידך.'
+              : 'נחתם. עותק נשמר בחשבונך ויישלח לאימייל.'}
+          </Alert>
         ) : (
-          <button type="button" onClick={submit} disabled={!canSign}
-            className="rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300">
-            {pending ? 'חותם…' : 'חתימה דיגיטלית'}
-          </button>
+          <Button
+            onClick={submit}
+            disabled={!canSign}
+            size="lg"
+            loading={pending}
+            loadingLabel="חותם…"
+            className="w-fit"
+          >
+            חתימה דיגיטלית
+          </Button>
         )}
       </footer>
-    </section>
+    </Card>
   );
 }

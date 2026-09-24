@@ -13,7 +13,7 @@ export function Stepper({ current, listingId }: { current: number; listingId?: s
         const content = (
           <>
             <span
-              className={`num flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+              className={`num flex h-7 w-7 shrink-0 items-center justify-center rounded-pill text-caption font-bold ${
                 state === 'current'
                   ? 'bg-brand-600 text-white'
                   : state === 'done'
@@ -24,7 +24,7 @@ export function Stepper({ current, listingId }: { current: number; listingId?: s
               {step}
             </span>
             <span
-              className={`hidden text-sm font-medium sm:inline ${
+              className={`hidden text-caption font-medium sm:inline ${
                 state === 'current' ? 'text-brand-800' : 'text-ink-500'
               }`}
             >

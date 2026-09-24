@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Field, FormAlert, inputClass, SubmitButton } from '@/components/form';
+import { FormAlert, Input, SubmitButton } from '@/components/ui';
 import { signUp, type AuthFormState } from '@/lib/actions/auth';
 
 export function SignupForm() {
@@ -11,45 +11,42 @@ export function SignupForm() {
     <form action={formAction} className="flex flex-col gap-4">
       <FormAlert error={state.error} notice={state.notice} />
 
-      <Field label="שם מלא">
-        <input name="full_name" type="text" required autoComplete="name" className={inputClass} />
-      </Field>
+      <Input label="שם מלא" name="full_name" type="text" required autoComplete="name" />
 
-      <Field label="טלפון" hint="הטלפון נחשף רק לצדדים שאישרו יחד את אותה החלפה.">
-        <input
-          name="phone"
-          type="tel"
-          required
-          autoComplete="tel"
-          dir="ltr"
-          className={`${inputClass} text-left`}
-          placeholder="050-1234567"
-        />
-      </Field>
+      <Input
+        label="טלפון"
+        name="phone"
+        type="tel"
+        required
+        autoComplete="tel"
+        dir="ltr"
+        inputClassName="text-left"
+        placeholder="050-1234567"
+        hint="הטלפון נחשף רק לצדדים שאישרו יחד את אותה החלפה."
+      />
 
-      <Field label="אימייל">
-        <input
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          dir="ltr"
-          className={`${inputClass} text-left`}
-          placeholder="you@example.com"
-        />
-      </Field>
+      <Input
+        label="אימייל"
+        name="email"
+        type="email"
+        required
+        autoComplete="email"
+        dir="ltr"
+        inputClassName="text-left"
+        hint="לכתובת הזאת יישלח מייל אימות."
+      />
 
-      <Field label="סיסמה" hint="לפחות 8 תווים.">
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={8}
-          autoComplete="new-password"
-          dir="ltr"
-          className={`${inputClass} text-left`}
-        />
-      </Field>
+      <Input
+        label="סיסמה"
+        name="password"
+        type="password"
+        required
+        minLength={8}
+        autoComplete="new-password"
+        dir="ltr"
+        inputClassName="text-left"
+        hint="לפחות 8 תווים."
+      />
 
       <SubmitButton pendingLabel="נרשם…">הרשמה</SubmitButton>
     </form>

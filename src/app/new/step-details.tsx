@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Field, FormAlert, inputClass, SubmitButton } from '@/components/form';
+import { CheckboxChip, FormAlert, Input, Select, SubmitButton } from '@/components/ui';
 import { saveDetails, type ListingFormState } from '@/lib/actions/listings';
 import { CITIES, CONDITION_LABELS, ROOM_OPTIONS, URBAN_RENEWAL_LABELS } from '@/lib/constants';
 import type { Listing, PropertyCondition, UrbanRenewalStatus } from '@/lib/types';
@@ -22,130 +22,109 @@ export function StepDetails({ listing }: { listing: Listing | null }) {
       <FormAlert error={state.error} notice={state.notice} />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="עיר">
-          <select name="city" required defaultValue={listing?.city ?? ''} className={inputClass}>
-            <option value="" disabled>
-              בחירת עיר
+        <Select label="עיר" name="city" required defaultValue={listing?.city ?? ''}>
+          <option value="" disabled>
+            בחירת עיר
+          </option>
+          {CITIES.map((city) => (
+            <option key={city} value={city}>
+              {city}
             </option>
-            {CITIES.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-        </Field>
+          ))}
+        </Select>
 
-        <Field label="שכונה" hint="לא חובה">
-          <input name="neighborhood" defaultValue={listing?.neighborhood ?? ''} className={inputClass} />
-        </Field>
+        <Input label="שכונה" hint="לא חובה" name="neighborhood" defaultValue={listing?.neighborhood ?? ''} />
 
-        <Field label="רחוב" hint="לא חובה. מספר הבית לא מוצג בלוח.">
-          <input name="street" defaultValue={listing?.street ?? ''} className={inputClass} />
-        </Field>
+        <Input
+          label="רחוב"
+          hint="לא חובה. מספר הבית לא מוצג בלוח."
+          name="street"
+          defaultValue={listing?.street ?? ''}
+        />
 
-        <Field label="מספר חדרים">
-          <select name="rooms" required defaultValue={listing?.rooms ?? ''} className={inputClass}>
-            <option value="" disabled>
-              בחירה
+        <Select label="מספר חדרים" name="rooms" required defaultValue={listing?.rooms ?? ''}>
+          <option value="" disabled>
+            בחירה
+          </option>
+          {ROOM_OPTIONS.map((rooms) => (
+            <option key={rooms} value={rooms}>
+              {rooms}
             </option>
-            {ROOM_OPTIONS.map((rooms) => (
-              <option key={rooms} value={rooms}>
-                {rooms}
-              </option>
-            ))}
-          </select>
-        </Field>
+          ))}
+        </Select>
 
-        <Field label="שטח במ״ר">
-          <input
-            name="size_sqm"
-            type="number"
-            required
-            min={15}
-            max={1000}
-            defaultValue={listing?.size_sqm ?? ''}
-            className={inputClass}
-          />
-        </Field>
+        <Input
+          label="שטח במ״ר"
+          name="size_sqm"
+          type="number"
+          required
+          min={15}
+          max={1000}
+          defaultValue={listing?.size_sqm ?? ''}
+        />
 
-        <Field label="שנת בנייה" hint="לא חובה">
-          <input
-            name="building_year"
-            type="number"
-            min={1900}
-            max={new Date().getFullYear() + 5}
-            defaultValue={listing?.building_year ?? ''}
-            className={inputClass}
-          />
-        </Field>
+        <Input
+          label="שנת בנייה"
+          hint="לא חובה"
+          name="building_year"
+          type="number"
+          min={1900}
+          max={new Date().getFullYear() + 5}
+          defaultValue={listing?.building_year ?? ''}
+        />
 
-        <Field label="קומה" hint="לא חובה">
-          <input
-            name="floor"
-            type="number"
-            min={-2}
-            max={80}
-            defaultValue={listing?.floor ?? ''}
-            className={inputClass}
-          />
-        </Field>
+        <Input
+          label="קומה"
+          hint="לא חובה"
+          name="floor"
+          type="number"
+          min={-2}
+          max={80}
+          defaultValue={listing?.floor ?? ''}
+        />
 
-        <Field label="סך הקומות בבניין" hint="לא חובה">
-          <input
-            name="total_floors"
-            type="number"
-            min={1}
-            max={80}
-            defaultValue={listing?.total_floors ?? ''}
-            className={inputClass}
-          />
-        </Field>
+        <Input
+          label="סך הקומות בבניין"
+          hint="לא חובה"
+          name="total_floors"
+          type="number"
+          min={1}
+          max={80}
+          defaultValue={listing?.total_floors ?? ''}
+        />
 
-        <Field label="מצב הדירה">
-          <select
-            name="condition"
-            defaultValue={listing?.condition ?? 'maintained'}
-            className={inputClass}
-          >
-            {(Object.keys(CONDITION_LABELS) as PropertyCondition[]).map((value) => (
-              <option key={value} value={value}>
-                {CONDITION_LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <Select label="מצב הדירה" name="condition" defaultValue={listing?.condition ?? 'maintained'}>
+          {(Object.keys(CONDITION_LABELS) as PropertyCondition[]).map((value) => (
+            <option key={value} value={value}>
+              {CONDITION_LABELS[value]}
+            </option>
+          ))}
+        </Select>
 
-        <Field label="התחדשות עירונית" hint="שדה חשוב בשוק הישראלי — משפיע על השווי העתידי.">
-          <select
-            name="urban_renewal_status"
-            defaultValue={listing?.urban_renewal_status ?? 'none'}
-            className={inputClass}
-          >
-            {(Object.keys(URBAN_RENEWAL_LABELS) as UrbanRenewalStatus[]).map((value) => (
-              <option key={value} value={value}>
-                {URBAN_RENEWAL_LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <Select
+          label="התחדשות עירונית"
+          hint="שדה חשוב בשוק הישראלי — משפיע על השווי העתידי."
+          name="urban_renewal_status"
+          defaultValue={listing?.urban_renewal_status ?? 'none'}
+        >
+          {(Object.keys(URBAN_RENEWAL_LABELS) as UrbanRenewalStatus[]).map((value) => (
+            <option key={value} value={value}>
+              {URBAN_RENEWAL_LABELS[value]}
+            </option>
+          ))}
+        </Select>
       </div>
 
       <fieldset>
-        <legend className="mb-2 text-sm font-semibold text-ink-700">מה יש בדירה</legend>
+        <legend className="mb-2 text-caption font-semibold text-ink-700">מה יש בדירה</legend>
         <div className="flex flex-wrap gap-2">
           {AMENITIES.map((amenity) => (
-            <label
+            <CheckboxChip
               key={amenity.name}
-              className="flex cursor-pointer items-center gap-2 rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-sm font-medium text-ink-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
-            >
-              <input
-                type="checkbox"
-                name={amenity.name}
-                defaultChecked={listing?.[amenity.name] ?? false}
-                className="h-4 w-4 accent-brand-600"
-              />
-              {amenity.label}
-            </label>
+              name={amenity.name}
+              label={amenity.label}
+              defaultChecked={listing?.[amenity.name] ?? false}
+            />
           ))}
         </div>
       </fieldset>

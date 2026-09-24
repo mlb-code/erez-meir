@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ListingCard } from '@/components/listing-card';
+import { EmptyState, PageHeader } from '@/components/ui';
 import { getActiveListings, type BoardFilters } from '@/lib/data/listings';
 import { ListingFilters, type FilterValues } from './filters';
 
@@ -32,21 +33,21 @@ export default async function ListingsPage({
   const listings = await getActiveListings(filters);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">לוח ההחלפות</h1>
-        <p className="mt-2 max-w-2xl text-ink-600">
-          בכל מודעה מופיע גם מה הבעלים מחפש בתמורה — כך אפשר לראות מיד אם יש כאן החלפה אפשרית,
-          ולא רק דירה למכירה.
-        </p>
-      </header>
+    <div className="mx-auto max-w-5xl px-gutter py-8">
+      <PageHeader
+        title="לוח ההחלפות"
+        description="בכל מודעה מופיע גם מה הבעלים מחפש בתמורה — כך אפשר לראות מיד אם יש כאן החלפה אפשרית, ולא רק דירה למכירה."
+        className="mb-6"
+      />
 
       <ListingFilters values={values} resultCount={listings.length} />
 
       {listings.length === 0 ? (
-        <p className="mt-10 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
-          לא נמצאו מודעות שמתאימות לסינון. אפשר להרחיב את הטווחים או לנקות את הסינון.
-        </p>
+        <EmptyState
+          className="mt-8"
+          title="לא נמצאו מודעות שמתאימות לסינון"
+          description="אפשר להרחיב את הטווחים או לנקות את הסינון ולהתחיל מחדש."
+        />
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {listings.map((listing) => (

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { SignDocument } from '@/components/signing/sign-document';
+import { Alert, BackLink } from '@/components/ui';
 import { maskIdNumber } from '@/lib/signing/render';
 import { prepareDocument } from '@/lib/signing/sign';
 import { createClient, getCurrentUser } from '@/lib/supabase/server';
@@ -36,13 +36,17 @@ export default async function DocumentPage({ params }: { params: Promise<{ kind:
     .eq('user_id', user.id).eq('kind', kind).eq('template_version', prepared.template.version).limit(1).maybeSingle();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <Link href="/account" className="text-sm font-medium text-brand-700 hover:underline">→ חזרה לאזור האישי</Link>
-      <h1 className="mt-4 text-2xl font-extrabold text-ink-900">{TITLES[kind as DocumentKind]}</h1>
+    <div className="mx-auto max-w-3xl px-gutter py-8">
+      <BackLink href="/account">חזרה לאזור האישי</BackLink>
+      <h1 className="mt-4 text-title text-ink-900">{TITLES[kind as DocumentKind]}</h1>
       {existing && (
-        <p className="mt-2 text-sm text-success-800">
-          חתמת על גרסה {prepared.template.version} ב-{new Date(existing.signed_at).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' })}.
-        </p>
+        <Alert tone="success" className="mt-3">
+          חתמת על גרסה <span className="num">{prepared.template.version}</span> ב-
+          <span className="num">
+            {new Date(existing.signed_at).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' })}
+          </span>
+          .
+        </Alert>
       )}
       <div className="mt-5">
         <SignDocument kind={kind as DocumentKind} title={prepared.template.title} text={prepared.text} hash={prepared.hash}

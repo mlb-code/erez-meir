@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { Alert } from '@/components/ui';
 import { Stepper } from './stepper';
 import { StepDetails } from './step-details';
 import { StepPhotos } from './step-photos';
@@ -62,27 +63,23 @@ export default async function NewListingPage({
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-gutter py-8">
       <Stepper current={step} listingId={listing?.id} />
 
-      <h1 className="mt-6 text-2xl font-extrabold text-ink-900">{TITLES[step - 1]}</h1>
+      <h1 className="mt-6 text-title text-ink-900">{TITLES[step - 1]}</h1>
       {listing && listing.status !== 'draft' && (
-        <p className="mt-1 text-sm text-ink-500">
+        <p className="mt-1 text-caption text-ink-500">
           אתה עורך מודעה שכבר פורסמה. השינויים ייכנסו לתוקף מיד עם השמירה.
         </p>
       )}
 
       {openDraft && (
-        <div className="mt-4 rounded-2xl border border-chain-200 bg-chain-50 p-4">
-          <p className="text-sm font-semibold text-chain-900">
-            יש לך טיוטה שלא הושלמה ({openDraft.city}).
-          </p>
-          <Link
-            href={`/new?id=${openDraft.id}&step=1`}
-            className="mt-2 inline-block text-sm font-bold text-chain-800 underline"
-          >
-            להמשיך אותה
-          </Link>
+        <div className="mt-4">
+          <Alert tone="warning" title={`יש לך טיוטה שלא הושלמה (${openDraft.city}).`}>
+            <Link href={`/new?id=${openDraft.id}&step=1`} className="font-bold underline">
+              להמשיך אותה
+            </Link>
+          </Alert>
         </div>
       )}
 
