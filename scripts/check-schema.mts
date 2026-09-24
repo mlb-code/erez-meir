@@ -49,4 +49,19 @@ const {data:p}=await eran.from('profiles').select('id_number_last4,identity_stat
 ok(p?.id_number_last4==='0018'&&p?.identity_status==='verified','נשמר מוצפן, 4 ספרות אחרונות, סטטוס נשמר verified',`${p?.identity_status}`);
 ok(typeof p?.id_number_enc==='string'&&!(p!.id_number_enc as string).includes('000000018'),'המספר המלא לא נקרא מהעמודה');
 await db.query(`update public.profiles set id_number_enc=null,id_number_last4=null,birth_date=null where id=$1`,[user!.id]);
+
+// 4) מיגרציה 024 — החלטת אימות בעלות שמורה ל-ops (§4.2)
+const {error:selfApprove}=await eran.from('listings').update({ownership_status:'needs_more'}).eq('owner_id',user!.id);
+ok(!!selfApprove&&selfApprove.message.includes('מנהל תפעול'),'בעלים לא יכול להכריע באימות בעלות של עצמו',selfApprove?.message);
+const {error:reopen}=await eran.from('listings').update({ownership_status:'pending'}).eq('owner_id',user!.id);
+ok(!!reopen&&reopen.message.includes('אינו ניתן לשינוי'),'בעלים לא יכול לפתוח מחדש אימות שאושר',reopen?.message);
+const stillApproved=(await db.query(`select count(*)::int n from public.listings where owner_id=$1 and ownership_status<>'approved'`,[user!.id])).rows[0].n;
+ok(stillApproved===0,'המודעה של ערן נשארה approved');
+await db.query(`update public.listings set ownership_status='approved' where owner_id=$1`,[user!.id]);
+// הגשה ראשונה (null → pending) — הזרימה של C1 — חייבת לעבור
+const {rows:[draft]}=await db.query(`insert into public.listings(owner_id,city,size_sqm,rooms,status) values($1,'תל אביב',60,3,'draft') returning id`,[user!.id]);
+const {error:submit}=await eran.from('listings').update({ownership_status:'pending',status:'pending_ownership'}).eq('id',draft.id);
+const {rows:[after]}=await db.query(`select ownership_status,status from public.listings where id=$1`,[draft.id]);
+ok(!submit&&after?.ownership_status==='pending'&&after?.status==='pending_ownership','בעלים כן יכול להגיש לאימות (null → pending)',submit?.message);
+await db.query(`delete from public.listings where id=$1`,[draft.id]);
 await db.end();
