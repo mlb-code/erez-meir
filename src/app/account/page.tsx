@@ -52,6 +52,11 @@ export default async function AccountPage() {
       <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
         <h2 className="mb-4 text-lg font-bold text-slate-900">הפרטים שלי</h2>
         <ProfileForm profile={profile as Profile | null} email={user.email ?? ''} />
+        <div className="mt-4 flex flex-wrap gap-3 border-t border-slate-100 pt-4 text-sm">
+          <Link href="/documents/terms" className="font-semibold text-brand-700 hover:underline">תנאי השירות</Link>
+          <Link href="/documents/privacy" className="font-semibold text-brand-700 hover:underline">מדיניות הפרטיות</Link>
+          <span className="text-slate-400">— צפייה וחתימה דיגיטלית</span>
+        </div>
       </section>
 
       <section className="mt-8">

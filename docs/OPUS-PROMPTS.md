@@ -111,10 +111,12 @@ branch: wp/c1-listing-wizard.
 ## C3 — הזמנה בכתב בעת פרסום
 
 ```
-תלוי ב-B2 (מנגנון החתימה, Fable). אל תתחיל לפני שיש src/lib/signing/*.
-קרא את docs/SPEC.md סעיפים 10.1, 10.2. משימה: אחרי צעד אימות הבעלות ולפני שליחה לבדיקה,
-המשתמש חותם על "הזמנה בכתב לביצוע פעולת תיווך" עבור הנכס הספציפי (related_listing_id),
-עם כל השדות ש-§10.2 מונה, דרך מנגנון החתימה של B2. הטקסט מגיע מ-document_templates
-(kind='brokerage_order'); אם אין תבנית — placeholder ברור "טקסט ממתין לעו"ד".
-branch: wp/c3-brokerage-order.
+B2 מוכן. קרא את docs/SPEC.md סעיפים 10.1, 10.2, ואת src/lib/signing/sign.ts,
+src/components/signing/sign-document.tsx ואת הדוגמה ב-src/app/documents/[kind]/page.tsx.
+משימה: אחרי צעד אימות הבעלות ולפני שליחה לבדיקה, המשתמש חותם על "הזמנה בכתב לביצוע
+פעולת תיווך" עבור הנכס הספציפי: בשרת prepareDocument('brokerage_order', vars) עם המשתנים
+שהתבנית דורשת (full_name, id_number_masked, asset_description, city, gush, helka, tat_helka,
+asking_value), ואז <SignDocument ... relatedListingId={listing.id}>. התבנית v1 כבר קיימת
+ב-document_templates. אין לשנות את מנגנון החתימה עצמו — רק להשתמש בו. לא לגעת ב-SMS
+(SMS_ENABLED מטופל בתוך המנגנון). branch: wp/c3-brokerage-order.
 ```

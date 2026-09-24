@@ -67,3 +67,10 @@ export const FEATURE_OPTIONS: { value: PropertyFeature; label: string }[] = (
 export const LEGAL_DISCLAIMER =
   'הפלטפורמה מבצעת שידוך בלבד ואינה צד בעסקה. היא אינה מטפלת בתשלומים, במשכנתאות או בהיבטים משפטיים. ' +
   'החלפת דירות מתבצעת בפועל כשתי עסקאות מכר מקבילות, בליווי עורכי הדין של כל אחד מהצדדים.';
+
+/**
+ * מצבי מעגל שבהם הצ'אט ופרטי הקשר פתוחים. מקביל ל-private.open_match_states() במסד.
+ * מעברי: all_interested נשאר עד שזרימת אישור ההפגשה (D4) תהיה בכל המסכים.
+ */
+export const OPEN_MATCH_STATES = ['all_interested', 'meeting_confirmed', 'in_negotiation', 'closing', 'swapped'] as const;
+export const isOpenMatchState = (status: string): boolean => (OPEN_MATCH_STATES as readonly string[]).includes(status);

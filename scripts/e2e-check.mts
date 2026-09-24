@@ -149,7 +149,7 @@ const { data: updated } = await eran2
   .select('status')
   .eq('id', chain.id)
   .single();
-check('הסטטוס התעדכן ל-all_interested', updated?.status === 'all_interested', String(updated?.status));
+check('המעגל במצב פתוח (all_interested או אחרי אישור הפגשה)', ['all_interested','meeting_confirmed','in_negotiation'].includes(String(updated?.status)), String(updated?.status));
 
 const { error: msgError } = await eran2
   .from('messages')

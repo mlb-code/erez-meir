@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ChainDiagram } from '@/components/chain-diagram';
 import { respondToMatch } from '@/lib/actions/matches';
-import { LEGAL_DISCLAIMER } from '@/lib/constants';
+import { LEGAL_DISCLAIMER, isOpenMatchState } from '@/lib/constants';
 import type { EnrichedMatch } from '@/lib/data/matches';
 
 const STATUS_TEXT: Record<EnrichedMatch['status'], { label: string; className: string }> = {
@@ -22,7 +22,7 @@ const STATUS_TEXT: Record<EnrichedMatch['status'], { label: string; className: s
 export function MatchCard({ match }: { match: EnrichedMatch }) {
   const status = STATUS_TEXT[match.status];
   const isChain = match.match_type === 'chain';
-  const canRespond = match.myResponse === null && match.status !== 'dismissed';
+  const canRespond = match.myResponse === null && !['dismissed', 'expired'].includes(match.status);
 
   return (
     <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -92,7 +92,7 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
               </button>
             </form>
           </div>
-        ) : match.status === 'all_interested' ? (
+        ) : isOpenMatchState(match.status) ? (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4">
             <p className="font-bold text-emerald-900">כל המשתתפים אישרו. הצ&apos;אט הקבוצתי נפתח.</p>
             <ContactList match={match} />
@@ -103,9 +103,9 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
               לצ&apos;אט המשותף
             </Link>
           </div>
-        ) : match.status === 'dismissed' ? (
+        ) : match.status === 'dismissed' || match.status === 'expired' ? (
           <p className="mt-4 rounded-xl bg-slate-100 p-4 text-sm text-slate-600">
-            אחד המשתתפים סימן שההחלפה לא רלוונטית, ולכן המעגל הזה נסגר.
+            {match.status === 'expired' ? 'אחת המודעות במעגל כבר לא פעילה, ולכן המעגל פג.' : 'אחד המשתתפים סימן שההחלפה לא רלוונטית, ולכן המעגל הזה נסגר.'}
           </p>
         ) : (
           <p className="mt-4 rounded-xl bg-chain-50 p-4 text-sm text-chain-900">

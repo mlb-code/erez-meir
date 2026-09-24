@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Chat } from './chat';
 import { ChainDiagram } from '@/components/chain-diagram';
-import { LEGAL_DISCLAIMER } from '@/lib/constants';
+import { LEGAL_DISCLAIMER, isOpenMatchState } from '@/lib/constants';
 import { getMatchById } from '@/lib/data/matches';
 import { createClient, getCurrentUser } from '@/lib/supabase/server';
 import type { Message } from '@/lib/types';
@@ -18,7 +18,7 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
   const match = await getMatchById(user.id, id);
   if (!match) notFound();
 
-  const isOpen = match.status === 'all_interested';
+  const isOpen = isOpenMatchState(match.status);
 
   let messages: Message[] = [];
   if (isOpen) {
