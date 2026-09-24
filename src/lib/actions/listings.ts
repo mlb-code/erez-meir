@@ -2,63 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { z } from 'zod';
-import { CITIES } from '@/lib/constants';
 import { runMatching } from '@/lib/actions/matching';
+import { getNeighborhoodsByIds } from '@/lib/data/neighborhoods';
+import { parseDetailsForm, parseWantedForm, valueSchema } from '@/lib/listing-form';
 import { createClient } from '@/lib/supabase/server';
 
 export type ListingFormState = { error?: string; notice?: string };
-
-const CITY_VALUES = CITIES as unknown as [string, ...string[]];
-
-/** שדה מספרי לא חובה — מחרוזת ריקה נחשבת "לא הוזן". */
-const optionalNumber = (min: number, max: number) =>
-  z
-    .string()
-    .trim()
-    .transform((value) => (value === '' ? null : Number(value)))
-    .refine(
-      (value) => value === null || (Number.isFinite(value) && value >= min && value <= max),
-      { message: `הערך חייב להיות בין ${min} ל-${max}` },
-    );
-
-const detailsSchema = z.object({
-  city: z.enum(CITY_VALUES, { message: 'יש לבחור עיר' }),
-  neighborhood: z.string().trim().max(80).transform((value) => value || null),
-  street: z.string().trim().max(80).transform((value) => value || null),
-  rooms: z.coerce.number().min(1, 'יש לבחור מספר חדרים').max(20),
-  size_sqm: z.coerce.number().int().min(15, 'שטח לא סביר').max(1000, 'שטח לא סביר'),
-  floor: optionalNumber(-2, 80),
-  total_floors: optionalNumber(1, 80),
-  building_year: optionalNumber(1900, new Date().getFullYear() + 5),
-  condition: z.enum(['new', 'renovated', 'maintained', 'needs_renovation', 'pre_urban_renewal']),
-  urban_renewal_status: z.enum([
-    'none',
-    'tama38_planned',
-    'tama38_approved',
-    'pinui_binui_planned',
-    'pinui_binui_approved',
-  ]),
-});
-
-const valueSchema = z.object({
-  asking_value: z.coerce
-    .number()
-    .int()
-    .min(100_000, 'השווי המבוקש נמוך מדי')
-    .max(100_000_000, 'השווי המבוקש גבוה מדי'),
-  description: z.string().trim().max(2000).transform((value) => value || null),
-});
-
-const wantedSchema = z.object({
-  wanted_min_rooms: optionalNumber(1, 20),
-  wanted_max_rooms: optionalNumber(1, 20),
-  wanted_min_sqm: optionalNumber(15, 1000),
-  cash_add_max: z.coerce.number().int().min(0).max(50_000_000),
-  cash_receive_min: z.coerce.number().int().min(0).max(50_000_000),
-});
-
-const checkbox = (formData: FormData, name: string) => formData.get(name) === 'on';
 
 async function requireUser() {
   const supabase = await createClient();
@@ -74,7 +23,7 @@ async function requireOwnListing(listingId: string) {
   const { supabase, user } = await requireUser();
   const { data } = await supabase
     .from('listings')
-    .select('id, owner_id, status')
+    .select('id, owner_id, status, ownership_status, asking_value')
     .eq('id', listingId)
     .maybeSingle();
 
@@ -83,26 +32,32 @@ async function requireOwnListing(listingId: string) {
 }
 
 // ---------------------------------------------------------------------------
-//  צעד 1 — פרטי הדירה
+//  צעד 1 — "מה יש לי"
 // ---------------------------------------------------------------------------
 
 export async function saveDetails(
   _prev: ListingFormState,
   formData: FormData,
 ): Promise<ListingFormState> {
-  const parsed = detailsSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const parsed = parseDetailsForm(formData);
+  if ('error' in parsed) return { error: parsed.error };
+
+  const values = parsed.values;
+
+  // שם השכונה נשמר גם כטקסט, לתאימות עם המודעות והמסכים הקיימים.
+  const neighborhoodId = values.neighborhood_id as string | null;
+  if (neighborhoodId) {
+    const [neighborhood] = await getNeighborhoodsByIds([neighborhoodId]);
+    if (!neighborhood || neighborhood.city !== values.city) {
+      return { error: 'השכונה שנבחרה אינה שייכת לעיר שנבחרה.' };
+    }
+    values.neighborhood = neighborhood.name;
+  } else {
+    values.neighborhood = null;
+  }
 
   const { supabase, user } = await requireUser();
   const listingId = String(formData.get('listing_id') ?? '');
-
-  const values = {
-    ...parsed.data,
-    has_elevator: checkbox(formData, 'has_elevator'),
-    has_parking: checkbox(formData, 'has_parking'),
-    has_balcony: checkbox(formData, 'has_balcony'),
-    has_safe_room: checkbox(formData, 'has_safe_room'),
-  };
 
   let id = listingId;
 
@@ -112,7 +67,7 @@ export async function saveDetails(
       .update(values)
       .eq('id', id)
       .eq('owner_id', user.id);
-    if (error) return { error: 'לא הצלחנו לשמור את פרטי הדירה.' };
+    if (error) return { error: 'לא הצלחנו לשמור את פרטי הנכס.' };
   } else {
     const { data, error } = await supabase
       .from('listings')
@@ -128,7 +83,7 @@ export async function saveDetails(
 }
 
 // ---------------------------------------------------------------------------
-//  צעד 3 — שווי מבוקש ותיאור
+//  צעד 3 — שווי מוצהר ותיאור
 // ---------------------------------------------------------------------------
 
 export async function saveValue(
@@ -142,52 +97,59 @@ export async function saveValue(
   const { supabase } = await requireOwnListing(listingId);
 
   const { error } = await supabase.from('listings').update(parsed.data).eq('id', listingId);
-  if (error) return { error: 'לא הצלחנו לשמור את השווי המבוקש.' };
+  if (error) return { error: 'לא הצלחנו לשמור את השווי המוצהר.' };
 
   redirect(`/new?id=${listingId}&step=4`);
 }
 
 // ---------------------------------------------------------------------------
-//  צעד 4 — מה אני מחפש, גמישות מזומן, ופרסום
+//  צעד 4 — "מה אני מחפש", גמישות מזומן, ופרסום
 // ---------------------------------------------------------------------------
 
 export async function saveWantedAndPublish(
   _prev: ListingFormState,
   formData: FormData,
 ): Promise<ListingFormState> {
-  const parsed = wantedSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const parsed = parseWantedForm(formData);
+  if ('error' in parsed) return { error: parsed.error };
 
-  const wantedCities = formData.getAll('wanted_cities').map(String).filter(Boolean);
-  if (!wantedCities.length) {
-    return { error: 'יש לבחור לפחות אזור אחד שבו תרצה לקבל דירה.' };
-  }
+  const values = parsed.values;
 
-  const { wanted_min_rooms: min, wanted_max_rooms: max } = parsed.data;
-  if (min !== null && max !== null && min > max) {
-    return { error: 'מספר החדרים המינימלי גדול מהמקסימלי.' };
-  }
+  // שכונות מבוקשות — רק כאלה שקיימות ושייכות לאחת הערים שנבחרו. ריק = כל העיר.
+  const neighborhoods = await getNeighborhoodsByIds(values.wanted_neighborhood_ids);
+  const wantedNeighborhoodIds = neighborhoods
+    .filter((neighborhood) => values.wanted_cities.includes(neighborhood.city))
+    .map((neighborhood) => neighborhood.id);
 
-  const mustHaves = formData.getAll('must_haves').map(String).filter(Boolean);
   const listingId = String(formData.get('listing_id') ?? '');
   const { supabase, listing } = await requireOwnListing(listingId);
+
+  if (listing.status === 'draft' && listing.asking_value === null) {
+    return { error: 'לפני הפרסום צריך להשלים את השווי המוצהר בצעד הקודם.' };
+  }
+
+  // פרסום ראשון: המודעה ממתינה לאימות בעלות (§4.2). היא לא עולה לאוויר
+  // ולא נכנסת למנוע עד שמנהל התפעול יאשר את הנסח (חבילה C2).
+  const publishing = listing.status === 'draft';
+  const ownershipApproved = listing.ownership_status === 'approved';
+  const nextStatus = publishing ? (ownershipApproved ? 'active' : 'pending_ownership') : listing.status;
 
   const { error } = await supabase
     .from('listings')
     .update({
-      ...parsed.data,
-      wanted_cities: wantedCities,
-      must_haves: mustHaves,
-      status: listing.status === 'draft' ? 'active' : listing.status,
+      ...values,
+      wanted_neighborhood_ids: wantedNeighborhoodIds,
+      status: nextStatus,
+      ...(publishing && !ownershipApproved ? { ownership_status: 'pending' } : {}),
     })
     .eq('id', listingId);
 
   if (error) {
-    return { error: 'לא הצלחנו לפרסם את המודעה. צריך לוודא שכל הצעדים הקודמים הושלמו.' };
+    return { error: 'לא הצלחנו לשמור את המודעה. צריך לוודא שכל הצעדים הקודמים הושלמו.' };
   }
 
-  // מיד עם הפרסום — מחפשים התאמות ומעגלים.
-  await runMatching();
+  // המנוע רץ על מודעות פעילות בלבד — מודעה שממתינה לאימות בעלות לא נכנסת אליו.
+  if (nextStatus === 'active') await runMatching();
 
   revalidatePath('/account');
   revalidatePath('/listings');
