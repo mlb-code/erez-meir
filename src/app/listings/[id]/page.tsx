@@ -91,8 +91,8 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
           <p className="mt-1 text-body text-ink-500">{describeAddress(listing)}</p>
         </div>
         <div className="text-left">
-          <p className="num text-title text-brand-700">{formatCurrency(listing.asking_value)}</p>
-          <p className="num text-xs text-ink-500">{formatCurrencyExact(listing.asking_value)}</p>
+          <p className="text-title text-brand-700">{formatCurrency(listing.asking_value)}</p>
+          <p className="text-xs text-ink-500">{formatCurrencyExact(listing.asking_value)}</p>
         </div>
       </div>
 

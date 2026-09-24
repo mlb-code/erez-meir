@@ -39,7 +39,7 @@ export default async function HomePage() {
             <Badge tone="brand" size="md">
               הראשונה בישראל לעסקאות חליפין בנדל״ן
             </Badge>
-            <h1 className="mt-4 text-title text-ink-900 sm:text-display">
+            <h1 className="mt-4 text-display text-ink-900">
               במקום למכור דירה ואז לקנות אחרת — פשוט מחליפים
             </h1>
             <p className="mt-4 text-body leading-relaxed text-ink-600">
@@ -83,7 +83,7 @@ export default async function HomePage() {
       <section className="bg-surface">
         <div className="mx-auto max-w-5xl px-gutter py-14">
           <div className="rounded-panel bg-brand-950 p-8 text-white sm:p-12">
-            <h2 className="text-title sm:text-display">הכוח האמיתי: מעגלים, לא רק זוגות</h2>
+            <h2 className="text-display">הכוח האמיתי: מעגלים, לא רק זוגות</h2>
             <p className="mt-4 max-w-2xl text-body leading-relaxed text-brand-100">
               ליהודה דירת 3 חדרים בתל אביב, והוא רוצה 4 חדרים בהרצליה. אלא שרות, שיש לה בדיוק דירה
               כזו, לא מעוניינת בתל אביב — היא רוצה רמת השרון. ולדוד, שיש לו דירה ברמת השרון, דווקא
@@ -156,7 +156,7 @@ export default async function HomePage() {
       {/* ===== קריאה לפעולה ===== */}
       <section className="bg-brand-600">
         <div className="mx-auto max-w-3xl px-gutter py-14 text-center">
-          <h2 className="text-title text-white sm:text-display">
+          <h2 className="text-display text-white">
             הדירה שלך יכולה להיות החוליה שסוגרת מעגל
           </h2>
           <p className="mt-3 text-body leading-relaxed text-brand-50">

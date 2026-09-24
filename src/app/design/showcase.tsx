@@ -72,7 +72,7 @@ export function Showcase() {
           ].map((item) => (
             <div key={item.label} className="text-center">
               <Logo className={`${item.size} text-brand-600`} />
-              <p className="num mt-2 text-xs text-ink-500">{item.label}</p>
+              <p className="mt-2 text-xs text-ink-500">{item.label}</p>
             </div>
           ))}
         </div>
@@ -195,10 +195,10 @@ export function Showcase() {
         </div>
       </Section>
 
-      <Section title="טיפוגרפיה" note="חמישה גדלים. Heebo, גובה שורה נדיב — עברית ללא ניקוד צריכה אוויר.">
+      <Section title="טיפוגרפיה" note="חמישה גדלים. display ו-title נוזליים (clamp) ולכן גדלים עם רוחב המסך. Heebo, גובה שורה נדיב — עברית ללא ניקוד צריכה אוויר.">
         <div className="flex flex-col gap-3">
-          <p className="text-display text-ink-900">display · 36 — כותרת ראשית</p>
-          <p className="text-title text-ink-900">title · 24 — כותרת עמוד</p>
+          <p className="text-display text-ink-900">display · 32→48 — כותרת ראשית</p>
+          <p className="text-title text-ink-900">title · 24→28 — כותרת עמוד</p>
           <p className="text-heading text-ink-900">heading · 18 — כותרת מקטע</p>
           <p className="text-body text-ink-700">
             body · 16 — טקסט רגיל. במקום למכור דירה ואז לקנות אחרת, מפרסמים את הדירה להחלפה

@@ -29,7 +29,7 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
             ללא תמונה
           </div>
         )}
-        <span className="num absolute right-2 bottom-2 rounded-chip bg-ink-900/80 px-2.5 py-1 text-caption font-bold text-white">
+        <span className="absolute right-2 bottom-2 rounded-chip bg-ink-900/80 px-2.5 py-1 text-caption font-bold text-white">
           {formatCurrency(listing.asking_value)}
         </span>
       </div>

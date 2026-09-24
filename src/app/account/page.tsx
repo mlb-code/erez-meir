@@ -108,7 +108,7 @@ export default async function AccountPage() {
                         {listing.size_sqm} מ״ר
                         {listing.neighborhood ? ` · ${listing.neighborhood}` : ''}
                       </p>
-                      <p className="num mt-0.5 text-caption font-semibold text-brand-700">
+                      <p className="mt-0.5 text-caption font-semibold text-brand-700">
                         {listing.asking_value !== null
                           ? formatCurrency(listing.asking_value)
                           : 'טרם הוגדר שווי'}

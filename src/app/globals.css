@@ -109,12 +109,14 @@
      גובה השורה נדיב יותר מהמקובל ב-Latin: עברית ללא ניקוד צריכה אוויר.
      מתחת ל-caption נשאר רק text-xs של Tailwind, לחיווי (תגים, מונים) ולא לתוכן.
      --------------------------------------------------------------------- */
-  --text-display: 2.25rem;
+  /* display ו-title נוזליים: טוקן אחד שמשרת 390px ו-1280px בלי גדלים נפרדים
+     לכל נקודת שבירה. 32px במובייל → 48px בדסקטופ. */
+  --text-display: clamp(2rem, 1.4rem + 2.6vw, 3rem);
   --text-display--line-height: 1.15;
   --text-display--letter-spacing: -0.02em;
   --text-display--font-weight: 800;
 
-  --text-title: 1.5rem;
+  --text-title: clamp(1.5rem, 1.36rem + 0.6vw, 1.75rem);
   --text-title--line-height: 1.3;
   --text-title--letter-spacing: -0.01em;
   --text-title--font-weight: 800;
