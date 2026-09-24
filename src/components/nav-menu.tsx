@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Badge, cx } from '@/components/ui';
 
 export interface NavLink {
   href: string;
@@ -34,15 +35,16 @@ export function NavMenu({
           <Link
             key={link.href}
             href={link.href}
-            className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            className={cx(
+              'relative rounded-field px-3 py-2 text-caption font-medium transition-colors',
               isActive(link.href)
                 ? 'bg-brand-50 text-brand-700'
-                : 'text-ink-600 hover:bg-ink-100 hover:text-ink-900'
-            }`}
+                : 'text-ink-600 hover:bg-ink-100 hover:text-ink-900',
+            )}
           >
             {link.label}
             {!!link.badge && (
-              <span className="num absolute -top-1 -left-1 min-w-5 rounded-full bg-chain-500 px-1.5 py-0.5 text-[11px] font-bold text-white">
+              <span className="num absolute -top-1 -left-1 min-w-5 rounded-pill bg-chain-500 px-1.5 py-0.5 text-[11px] font-bold text-white">
                 {link.badge}
               </span>
             )}
@@ -58,7 +60,7 @@ export function NavMenu({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? 'סגירת התפריט' : 'פתיחת התפריט'}
-        className="relative rounded-lg p-2 text-ink-700 hover:bg-ink-100 md:hidden"
+        className="relative rounded-field p-2 text-ink-700 transition-colors hover:bg-ink-100 md:hidden"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
           {open ? (
@@ -68,26 +70,27 @@ export function NavMenu({
           )}
         </svg>
         {!open && links.some((link) => link.badge) && (
-          <span className="absolute top-1 left-1 h-2.5 w-2.5 rounded-full bg-chain-500" />
+          <span className="absolute top-1 left-1 h-2.5 w-2.5 rounded-pill bg-chain-500" />
         )}
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full border-b border-ink-200 bg-white shadow-lg md:hidden">
-          <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-3">
+        <div className="absolute inset-x-0 top-full border-b border-line bg-surface shadow-raised md:hidden">
+          <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-gutter py-3">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-base font-medium ${
-                  isActive(link.href) ? 'bg-brand-50 text-brand-700' : 'text-ink-700'
-                }`}
+                className={cx(
+                  'flex items-center justify-between rounded-field px-3 py-2.5 text-body font-medium',
+                  isActive(link.href) ? 'bg-brand-50 text-brand-700' : 'text-ink-700',
+                )}
               >
                 {link.label}
                 {!!link.badge && (
-                  <span className="num rounded-full bg-chain-500 px-2 py-0.5 text-xs font-bold text-white">
+                  <Badge tone="chain" className="num">
                     {link.badge}
-                  </span>
+                  </Badge>
                 )}
               </Link>
             ))}

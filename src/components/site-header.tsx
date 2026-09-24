@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Logo } from '@/components/logo';
+import { LogoLockup } from '@/components/logo';
 import { NavMenu, type NavLink } from '@/components/nav-menu';
+import { Button, ButtonLink } from '@/components/ui';
 import { signOut } from '@/lib/actions/auth';
 import { countPendingMatches } from '@/lib/data/matches';
 import { getCurrentUser } from '@/lib/supabase/server';
@@ -21,11 +22,10 @@ export async function SiteHeader() {
       ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Logo />
-          <span className="text-lg font-extrabold tracking-tight text-ink-900">החלפה</span>
+    <header className="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-gutter">
+        <Link href="/" className="rounded-chip focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
+          <LogoLockup />
         </Link>
 
         <div className="flex-1" />
@@ -33,35 +33,23 @@ export async function SiteHeader() {
         <NavMenu links={links}>
           {user ? (
             <div className="flex items-center gap-2">
-              <Link
-                href="/new"
-                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-              >
+              <ButtonLink href="/new" size="sm">
                 פרסום מודעה
-              </Link>
+              </ButtonLink>
               <form action={signOut}>
-                <button
-                  type="submit"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-800"
-                >
+                <Button type="submit" variant="ghost" size="sm">
                   התנתקות
-                </button>
+                </Button>
               </form>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link
-                href="/login"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-ink-100"
-              >
+              <ButtonLink href="/login" variant="ghost" size="sm">
                 התחברות
-              </Link>
-              <Link
-                href="/signup"
-                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-              >
+              </ButtonLink>
+              <ButtonLink href="/signup" size="sm">
                 הרשמה
-              </Link>
+              </ButtonLink>
             </div>
           )}
         </NavMenu>

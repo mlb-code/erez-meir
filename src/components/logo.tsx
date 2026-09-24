@@ -1,27 +1,48 @@
-export function Logo({ className = 'h-9 w-9' }: { className?: string }) {
+import { cx } from '@/components/ui/cx';
+
+/**
+ * הסימן של חליפין: שני גגות זהים, אחד מסובב ב-180° מול השני. סימטריה
+ * סיבובית היא בדיוק מה שהמילה "חליפין" אומרת — מה שאני נותן שווה למה
+ * שאני מקבל.
+ *
+ * הגגות מוסטים אופקית זה מול זה ולא מיושרים: כשהם מיושרים הם נסגרים
+ * לצורת מעוין אחת, וההיסט הוא מה שמשאיר שתי צורות נפרדות שהחליפו מקום.
+ * צבע אחד בלבד (currentColor) והגגות הם חורים שקופים ולא צבע שני, כך
+ * שהסימן עובד על כל רקע ונשאר קריא ב-32px ובתגית הדפדפן.
+ */
+export function Logo({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
-      <circle cx="24" cy="24" r="23" className="fill-brand-600" />
-      {/* חץ מעגלי — רומז על מעגל ההחלפה */}
+    <svg
+      viewBox="0 0 48 48"
+      className={cx('shrink-0', className ?? 'h-9 w-9 text-brand-600')}
+      role="img"
+      aria-label="חליפין"
+    >
       <path
-        d="M13 20a11.5 11.5 0 0 1 19-4.3"
-        className="stroke-brand-200"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        fill="none"
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M24 0A24 24 0 1 1 24 48 24 24 0 0 1 24 0Z
+           M16.4 19.2 29 7.2l12.6 12h-8.7L29 15.49l-3.9 3.71Z
+           M31.6 28.8 19 40.8 6.4 28.8h8.7L19 32.51l3.9-3.71Z"
       />
-      <path d="M32.6 10.6l.6 5.6-5.6.5z" className="fill-brand-200" />
-      <path
-        d="M35 28a11.5 11.5 0 0 1-19 4.3"
-        className="stroke-chain-300"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path d="M15.4 37.4l-.6-5.6 5.6-.5z" className="fill-chain-300" />
-      {/* בית */}
-      <path d="M24 17.5l7.5 6.2V32a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-8.3z" className="fill-white" />
-      <rect x="22" y="26" width="4" height="7" rx="0.6" className="fill-brand-600" />
     </svg>
+  );
+}
+
+/** הסימן יחד עם שם המותג — מה שמופיע בראש האתר ובתחתיתו. */
+export function LogoLockup({
+  className,
+  markClassName = 'h-9 w-9 text-brand-600',
+  textClassName = 'text-heading text-ink-900',
+}: {
+  className?: string;
+  markClassName?: string;
+  textClassName?: string;
+}) {
+  return (
+    <span className={cx('flex items-center gap-2.5', className)}>
+      <Logo className={markClassName} />
+      <span className={cx('font-extrabold tracking-tight', textClassName)}>חליפין</span>
+    </span>
   );
 }

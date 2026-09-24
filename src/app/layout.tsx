@@ -13,8 +13,8 @@ const heebo = Heebo({
 
 export const metadata: Metadata = {
   title: {
-    default: 'החלפה — פלטפורמת החלפת דירות',
-    template: '%s | החלפה',
+    default: 'חליפין — פלטפורמת החלפת דירות',
+    template: '%s | חליפין',
   },
   description:
     'במקום למכור דירה ואז לקנות אחרת — מפרסמים את הדירה להחלפה. המערכת מוצאת התאמות ישירות ושרשראות החלפה בין כמה בעלי דירות.',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#16807a',
+  themeColor: '#0c8174',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
