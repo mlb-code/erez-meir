@@ -36,13 +36,21 @@ getNeighborhoods(city) שמחזירה מהטבלה, (4) קישור 25 מודעו
 לפי שדה neighborhood הקיים (migration 006). אל תשנה סכמה. branch: wp/a2-neighborhoods.
 ```
 
-## A3 — מיתוג "חליפין"
+## A3 — מיתוג "חליפין" + מערכת עיצוב לאתר
 
 ```
-קרא את docs/SPEC.md סעיף 0.2 הנחה ה1 ו-§1.
-משימה: להחליף את שם המותג מ"החלפה" ל"חליפין" בכל הממשק, ה-metadata, README, הלוגו
-(src/components/logo.tsx — לעדכן צורה/צבע אם צריך, לא חובה), ו-LEGAL_DISCLAIMER.
-לוודא שאין אנגלית בממשק. לא לשנות שמות קבצים, טבלאות או משתנים בקוד. branch: wp/a3-branding.
+קרא את docs/SPEC.md סעיף 1 (עקרונות 6–7) והנחה ה1. זה אתר, לא אפליקציה — אבל רוב המשתמשים מגיעים
+מהטלפון. משימה בשני חלקים:
+(1) מיתוג: להחליף "החלפה" ב"חליפין" בכל הממשק, metadata, README, LEGAL_DISCLAIMER; לוגו חדש
+    ב-src/components/logo.tsx שמתאים לשם. לא לשנות שמות קבצים/טבלאות/משתנים.
+(2) מערכת עיצוב: ב-src/app/globals.css לקבוע פלטה (ראשי, משני, הצלחה, אזהרה, שגיאה, ניטרלים),
+    טיפוגרפיה (Heebo, 5 גדלים), רדיוסים, צללים, ריווח — כטוקנים של Tailwind v4 (@theme).
+    ליצור ב-src/components/ui/ קומפוננטות בסיס אחידות: Button (3 וריאנטים, 3 גדלים, מצב טעינה),
+    Input/Select/Textarea עם תווית ושגיאה, Card, Badge, EmptyState, Skeleton, Alert, PageHeader.
+    להחליף בהדרגה את הקומפוננטות הקיימות בדפים הקיימים לשימוש בבסיס החדש (בלי לשנות התנהגות).
+    דף דמו פנימי /design (noindex) שמציג את כל הקומפוננטות בשני הרוחבים.
+תוצר: אתר שנראה עקבי ומקצועי בדסקטופ ובמובייל, בלי אנגלית בממשק. צילומי מסך של לפני/אחרי ב-PR.
+branch: wp/a3-branding-design.
 ```
 
 ## E7 — תשתית
@@ -63,9 +71,10 @@ getNeighborhoods(city) שמחזירה מהטבלה, (4) קישור 25 מודעו
 קרא את docs/SPEC.md סעיפים 4.1, 5.3 (profiles), 11, 13.
 הסכמה כבר קיימת: profiles.identity_status, phone_verified_at, id_number_last4, birth_date,
 טבלת identity_documents, דלי identity-docs (פרטי), ופונקציית public.submit_identity(p_id_number, p_birth_date).
-משימה: לבנות את זרימת ההרשמה בארבעה צעדים: אימייל+סיסמה (קיים) → טלפון עם קוד SMS
-(Supabase Phone Auth, ספק Twilio Verify — הגדרות דרך משתני סביבה, לתעד ב-PR מה להגדיר בדשבורד)
-→ מספר ת"ז + תאריך לידה (קריאה ל-submit_identity) + העלאת צילום ת"ז ל-identity-docs/{user_id}/…
+משימה: לבנות את זרימת ההרשמה בארבעה צעדים: אימייל+סיסמה (קיים) → טלפון: הזנת מספר;
+אם משתנה הסביבה SMS_ENABLED=true — שליחת קוד ואימות דרך Supabase Phone Auth; אחרת (ברירת
+המחדל עכשיו, SMS נסגר בסוף) — המספר נשמר בפרופיל בלי אימות ו-phone_verified_at נשאר ריק.
+הזרימה חייבת לעבוד מלא בשני המצבים → מספר ת"ז + תאריך לידה (קריאה ל-submit_identity) + העלאת צילום ת"ז ל-identity-docs/{user_id}/…
 ושורה ב-identity_documents → מסך "הזהות שלך בבדיקה". משתמש ב-identity_status <> 'verified'
 לא יכול לפרסם (חסימה ב-saveWantedAndPublish + הודעה ברורה). לא לגעת בחתימת מסמכים (B2).
 בדיקות Playwright לזרימה. branch: wp/b1-identity.
