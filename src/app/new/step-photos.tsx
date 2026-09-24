@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
-import { ButtonLink, FormAlert } from '@/components/ui';
+import { Alert, ButtonLink, CheckboxChip, FormAlert } from '@/components/ui';
 import { photoUrl } from '@/lib/format';
 import { createClient } from '@/lib/supabase/client';
 import type { ListingPhoto } from '@/lib/types';
@@ -81,6 +81,24 @@ export function StepPhotos({
     startTransition(() => router.refresh());
   }
 
+  /**
+   * תמונה שמזהה את הבניין מוסתרת מכל מי שלא חתם על אישור הפגשה (§4.4).
+   * הסימון נעשה על ידי הבעלים בזמן ההעלאה, ונאכף ב-listing_photos_view.
+   */
+  async function toggleExterior(photo: ListingPhoto, isExterior: boolean) {
+    setBusy(true);
+    setError(undefined);
+    const supabase = createClient();
+    const { error: updateError } = await supabase
+      .from('listing_photos')
+      .update({ is_exterior: isExterior })
+      .eq('id', photo.id);
+
+    if (updateError) setError('לא הצלחנו לעדכן את סימון התמונה.');
+    setBusy(false);
+    startTransition(() => router.refresh());
+  }
+
   async function removePhoto(photo: ListingPhoto) {
     setBusy(true);
     const supabase = createClient();
@@ -127,28 +145,46 @@ export function StepPhotos({
       </div>
 
       {photos.length > 0 && (
+        <Alert tone="info" title="תמונה שמזהה את הבניין">
+          סמן כל תמונה שרואים בה את החזית, את הכניסה או את מספר הבית. תמונות כאלה מוסתרות
+          מהצד השני עד שכל המשתתפים במעגל חותמים על אישור הפגשה.
+        </Alert>
+      )}
+
+      {photos.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((photo, index) => (
-            <li key={photo.id} className="relative overflow-hidden rounded-field border border-line">
-              <img
-                src={photoUrl(photo.storage_path)}
-                alt=""
-                className="aspect-4/3 w-full object-cover"
-              />
-              {index === 0 && (
-                <span className="absolute top-2 right-2 rounded-chip bg-brand-600 px-2 py-0.5 text-xs font-bold text-white">
-                  ראשית
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={() => removePhoto(photo)}
-                disabled={busy}
-                aria-label="מחיקת התמונה"
-                className="absolute bottom-2 left-2 rounded-chip bg-surface/90 px-2.5 py-1 text-xs font-semibold text-danger-700 transition-colors hover:bg-surface disabled:opacity-50"
-              >
-                מחיקה
-              </button>
+            <li key={photo.id} className="overflow-hidden rounded-field border border-line">
+              <div className="relative">
+                <img
+                  src={photoUrl(photo.storage_path)}
+                  alt=""
+                  className="aspect-4/3 w-full object-cover"
+                />
+                {index === 0 && (
+                  <span className="absolute top-2 right-2 rounded-chip bg-brand-600 px-2 py-0.5 text-xs font-bold text-white">
+                    ראשית
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => removePhoto(photo)}
+                  disabled={busy}
+                  aria-label="מחיקת התמונה"
+                  className="absolute bottom-2 left-2 rounded-chip bg-surface/90 px-2.5 py-1 text-xs font-semibold text-danger-700 transition-colors hover:bg-surface disabled:opacity-50"
+                >
+                  מחיקה
+                </button>
+              </div>
+              <div className="p-2">
+                <CheckboxChip
+                  label="תמונה חיצונית שמזהה את הבניין"
+                  checked={photo.is_exterior}
+                  disabled={busy}
+                  onChange={(event) => toggleExterior(photo, event.target.checked)}
+                  className="w-full text-xs"
+                />
+              </div>
             </li>
           ))}
         </ul>

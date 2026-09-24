@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { MoneyInput } from '@/components/money-input';
-import { ButtonLink, FormAlert, SubmitButton, Textarea } from '@/components/ui';
+import { Alert, ButtonLink, FormAlert, SubmitButton, Textarea } from '@/components/ui';
 import { saveValue, type ListingFormState } from '@/lib/actions/listings';
 import type { Listing } from '@/lib/types';
 
@@ -14,9 +14,15 @@ export function StepValue({ listing }: { listing: Listing }) {
       <input type="hidden" name="listing_id" value={listing.id} />
       <FormAlert error={state.error} notice={state.notice} />
 
+      <Alert tone="info" title="השווי המוצהר הוא מספר עובד, לא מספר לראווה">
+        הפער בין השווי שהצהרת לבין השווי של הנכס שתקבל בתמורה הוא בדיוק תשלום האיזון שיעבור
+        בין הצדדים. שווי מנופח מייצר פער גדול שאף אחד לא ישלים, ומוציא אותך ממעגלי החלפה
+        שהיו מתאימים לך.
+      </Alert>
+
       <MoneyInput
-        label="השווי המבוקש עבור הדירה"
-        hint="השווי הזה הוא הבסיס לחישוב פער המזומן מול הדירה שתקבל בתמורה."
+        label="השווי המוצהר של הנכס"
+        hint="כאן מצהירים כמה הנכס שווה לדעתך. זה הבסיס לחישוב פער המזומן מול הנכס שתקבל בתמורה."
         name="asking_value"
         required
         min={100_000}
@@ -25,7 +31,7 @@ export function StepValue({ listing }: { listing: Listing }) {
       />
 
       <Textarea
-        label="תיאור הדירה"
+        label="תיאור הנכס"
         hint="לא חובה, אבל מודעה עם תיאור מקבלת הרבה יותר פניות."
         name="description"
         rows={6}

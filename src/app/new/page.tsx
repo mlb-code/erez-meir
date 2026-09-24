@@ -7,15 +7,16 @@ import { StepDetails } from './step-details';
 import { StepPhotos } from './step-photos';
 import { StepValue } from './step-value';
 import { StepWanted } from './step-wanted';
+import { getNeighborhoodsByCity } from '@/lib/data/neighborhoods';
 import { createClient, getCurrentUser } from '@/lib/supabase/server';
 import type { ListingWithPhotos } from '@/lib/types';
 
-export const metadata: Metadata = { title: 'פרסום מודעה להחלפה' };
+export const metadata: Metadata = { title: 'פרסום נכס להחלפה' };
 
 const TITLES = [
-  'מה יש לי — פרטי הדירה',
-  'תמונות הדירה',
-  'השווי המבוקש',
+  'מה יש לי — פרטי הנכס',
+  'תמונות הנכס',
+  'השווי המוצהר',
   'מה אני מחפש בתמורה',
 ];
 
@@ -34,7 +35,7 @@ export default async function NewListingPage({
   if (id) {
     const { data } = await supabase
       .from('listings')
-      .select('*, listing_photos(id, listing_id, storage_path, sort_order)')
+      .select('*, listing_photos(id, listing_id, storage_path, sort_order, is_exterior)')
       .eq('id', id)
       .maybeSingle();
 
@@ -47,6 +48,10 @@ export default async function NewListingPage({
 
   const step = Math.min(4, Math.max(1, Number(stepParam) || 1));
   if (step > 1 && !listing) redirect('/new');
+
+  // רשימת השכונות הסגורה (§4.3) — נטענת פעם אחת ומוזנת לצעדים שצריכים אותה.
+  const neighborhoodsByCity =
+    step === 1 || step === 4 ? await getNeighborhoodsByCity() : {};
 
   // טיוטה קיימת שלא הושלמה — מציעים להמשיך אותה במקום לפתוח מודעה חדשה
   let openDraft: { id: string; city: string } | null = null;
@@ -69,7 +74,7 @@ export default async function NewListingPage({
       <h1 className="mt-6 text-title text-ink-900">{TITLES[step - 1]}</h1>
       {listing && listing.status !== 'draft' && (
         <p className="mt-1 text-caption text-ink-500">
-          אתה עורך מודעה שכבר פורסמה. השינויים ייכנסו לתוקף מיד עם השמירה.
+          אתה עורך מודעה קיימת. השינויים ייכנסו לתוקף מיד עם השמירה.
         </p>
       )}
 
@@ -84,12 +89,16 @@ export default async function NewListingPage({
       )}
 
       <div className="mt-6">
-        {step === 1 && <StepDetails listing={listing} />}
+        {step === 1 && (
+          <StepDetails listing={listing} neighborhoodsByCity={neighborhoodsByCity} />
+        )}
         {step === 2 && listing && (
           <StepPhotos listingId={listing.id} userId={user.id} photos={listing.listing_photos} />
         )}
         {step === 3 && listing && <StepValue listing={listing} />}
-        {step === 4 && listing && <StepWanted listing={listing} />}
+        {step === 4 && listing && (
+          <StepWanted listing={listing} neighborhoodsByCity={neighborhoodsByCity} />
+        )}
       </div>
     </div>
   );

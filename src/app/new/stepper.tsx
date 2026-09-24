@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const STEPS = ['פרטי הדירה', 'תמונות', 'שווי מבוקש', 'מה אני מחפש'];
+const STEPS = ['פרטי הנכס', 'תמונות', 'שווי מוצהר', 'מה אני מחפש'];
 
 export function Stepper({ current, listingId }: { current: number; listingId?: string }) {
   return (
