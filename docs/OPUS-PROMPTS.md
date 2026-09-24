@@ -76,8 +76,10 @@ branch: wp/a3-branding-design.
 המחדל עכשיו, SMS נסגר בסוף) — המספר נשמר בפרופיל בלי אימות ו-phone_verified_at נשאר ריק.
 הזרימה חייבת לעבוד מלא בשני המצבים → מספר ת"ז + תאריך לידה (קריאה ל-submit_identity) + העלאת צילום ת"ז ל-identity-docs/{user_id}/…
 ושורה ב-identity_documents → מסך "הזהות שלך בבדיקה". משתמש ב-identity_status <> 'verified'
-לא יכול לפרסם (חסימה ב-saveWantedAndPublish + הודעה ברורה). לא לגעת בחתימת מסמכים (B2).
-בדיקות Playwright לזרימה. branch: wp/b1-identity.
+לא יכול לפרסם (חסימה ב-saveWantedAndPublish שב-src/lib/actions/listings.ts + הודעה ברורה במסך
+הסיום של האשף). לא לגעת בחתימת מסמכים (B2). הולידציה של הטפסים בקובץ טהור עם בדיקות vitest
+(כמו src/lib/listing-form.ts מחבילה C1), ומעבר ידני בדפדפן; Playwright יגיע ב-E9.
+branch: wp/b1-identity.
 ```
 
 ## C1 — אשף פרסום v2 ✅ בוצע (24.09, PR #2)
