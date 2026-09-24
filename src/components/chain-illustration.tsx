@@ -55,16 +55,16 @@ export function ChainIllustration() {
         <div
           key={node.name}
           style={{ left: node.left, top: node.top }}
-          className="absolute w-28 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-200 bg-white p-2.5 text-center shadow-md sm:w-32"
+          className="absolute w-28 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-ink-200 bg-white p-2.5 text-center shadow-md sm:w-32"
         >
           <span className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100">
             <svg viewBox="0 0 24 24" className="h-4 w-4 text-brand-700" fill="currentColor">
               <path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z" />
             </svg>
           </span>
-          <p className="text-sm font-extrabold text-slate-900">{node.name}</p>
-          <p className="text-xs text-slate-500">{node.city}</p>
-          <p className="text-xs font-semibold text-slate-600">{node.detail}</p>
+          <p className="text-sm font-extrabold text-ink-900">{node.name}</p>
+          <p className="text-xs text-ink-500">{node.city}</p>
+          <p className="text-xs font-semibold text-ink-600">{node.detail}</p>
         </div>
       ))}
 
@@ -73,7 +73,7 @@ export function ChainIllustration() {
           key={label.text}
           style={{ left: label.left, top: label.top }}
           className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-[11px] font-bold whitespace-nowrap shadow-sm ${
-            label.paying ? 'bg-chain-100 text-chain-800' : 'bg-emerald-100 text-emerald-800'
+            label.paying ? 'bg-chain-100 text-chain-800' : 'bg-success-100 text-success-800'
           }`}
         >
           {label.text}

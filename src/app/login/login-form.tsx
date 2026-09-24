@@ -54,9 +54,9 @@ export function LoginForm({ redirect }: { redirect?: string }) {
         <SubmitButton pendingLabel="מתחבר…">התחברות</SubmitButton>
       </form>
 
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-4">
-        <p className="text-sm font-semibold text-slate-700">כניסה מהירה לחשבון הדגמה</p>
-        <p className="mt-1 text-xs text-slate-500">
+      <div className="rounded-2xl border border-dashed border-ink-300 bg-white p-4">
+        <p className="text-sm font-semibold text-ink-700">כניסה מהירה לחשבון הדגמה</p>
+        <p className="mt-1 text-xs text-ink-500">
           נתוני דמו בלבד. בחירה ממלאת את הטופס — נשאר רק ללחוץ על &quot;התחברות&quot;.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -68,10 +68,10 @@ export function LoginForm({ redirect }: { redirect?: string }) {
                 setEmail(account.email);
                 setPassword(DEMO_PASSWORD);
               }}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-right text-sm transition-colors hover:border-brand-300 hover:bg-brand-50"
+              className="rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 text-right text-sm transition-colors hover:border-brand-300 hover:bg-brand-50"
             >
-              <span className="block font-semibold text-slate-800">{account.name}</span>
-              <span className="block text-xs text-slate-500">{account.hint}</span>
+              <span className="block font-semibold text-ink-800">{account.name}</span>
+              <span className="block text-xs text-ink-500">{account.hint}</span>
             </button>
           ))}
         </div>

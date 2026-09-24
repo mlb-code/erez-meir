@@ -42,17 +42,17 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
         → חזרה להתאמות
       </Link>
 
-      <h1 className="mt-4 text-2xl font-extrabold text-slate-900">
+      <h1 className="mt-4 text-2xl font-extrabold text-ink-900">
         {match.match_type === 'direct' ? 'החלפה ישירה' : `שרשרת של ${match.totalCount}`}
       </h1>
 
-      <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
-        <h2 className="mb-3 text-sm font-bold text-slate-500">מסלול ההחלפה</h2>
+      <section className="mt-5 rounded-2xl border border-ink-200 bg-white p-4">
+        <h2 className="mb-3 text-sm font-bold text-ink-500">מסלול ההחלפה</h2>
         <ChainDiagram participants={match.participants} steps={match.steps} />
       </section>
 
       <section className="mt-6">
-        <h2 className="mb-3 text-lg font-extrabold text-slate-900">
+        <h2 className="mb-3 text-lg font-extrabold text-ink-900">
           {isOpen ? 'צ׳אט משותף' : 'הצ׳אט עדיין סגור'}
         </h2>
 
@@ -64,7 +64,7 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
             initialMessages={messages}
           />
         ) : (
-          <p className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+          <p className="rounded-2xl border border-dashed border-ink-300 bg-white p-8 text-center text-ink-500">
             הצ׳אט הקבוצתי נפתח רק אחרי שכל המשתתפים במעגל סימנו &quot;מעוניין&quot;. כרגע אישרו{' '}
             <span className="font-bold">
               {match.interestedCount} מתוך {match.totalCount}
@@ -74,7 +74,7 @@ export default async function MatchChatPage({ params }: { params: Promise<{ id: 
         )}
       </section>
 
-      <p className="mt-6 rounded-xl bg-slate-100 p-4 text-xs leading-relaxed text-slate-500">
+      <p className="mt-6 rounded-xl bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
         {LEGAL_DISCLAIMER}
       </p>
     </div>

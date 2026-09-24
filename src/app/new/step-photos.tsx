@@ -98,23 +98,23 @@ export function StepPhotos({
       <FormAlert error={error} />
 
       <div>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-ink-600">
           אפשר להעלות עד {MAX_PHOTOS} תמונות. התמונה הראשונה היא זו שתופיע בלוח.
         </p>
 
         <label
-          className={`mt-3 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 bg-white px-6 py-10 text-center transition-colors hover:border-brand-400 hover:bg-brand-50 ${
+          className={`mt-3 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-300 bg-white px-6 py-10 text-center transition-colors hover:border-brand-400 hover:bg-brand-50 ${
             busy || remaining <= 0 ? 'pointer-events-none opacity-50' : ''
           }`}
         >
-          <svg viewBox="0 0 24 24" className="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <svg viewBox="0 0 24 24" className="h-8 w-8 text-ink-400" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 16V4m0 0L8 8m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" strokeLinecap="round" />
           </svg>
-          <span className="text-sm font-semibold text-slate-700">
+          <span className="text-sm font-semibold text-ink-700">
             {busy ? 'מעלה…' : remaining > 0 ? 'בחירת תמונות מהמכשיר' : 'הגעת למקסימום התמונות'}
           </span>
-          <span className="num text-xs text-slate-500">{photos.length} / {MAX_PHOTOS}</span>
+          <span className="num text-xs text-ink-500">{photos.length} / {MAX_PHOTOS}</span>
           <input
             ref={inputRef}
             type="file"
@@ -130,7 +130,7 @@ export function StepPhotos({
       {photos.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((photo, index) => (
-            <li key={photo.id} className="relative overflow-hidden rounded-xl border border-slate-200">
+            <li key={photo.id} className="relative overflow-hidden rounded-xl border border-ink-200">
               <img
                 src={photoUrl(photo.storage_path)}
                 alt=""
@@ -146,7 +146,7 @@ export function StepPhotos({
                 onClick={() => removePhoto(photo)}
                 disabled={busy}
                 aria-label="מחיקת התמונה"
-                className="absolute bottom-2 left-2 rounded-lg bg-white/90 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-white"
+                className="absolute bottom-2 left-2 rounded-lg bg-white/90 px-2.5 py-1 text-xs font-semibold text-danger-700 hover:bg-white"
               >
                 מחיקה
               </button>
@@ -164,7 +164,7 @@ export function StepPhotos({
         </Link>
         <Link
           href={`/new?id=${listingId}&step=1`}
-          className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-base font-semibold text-slate-700 hover:bg-slate-50"
+          className="rounded-xl border border-ink-300 bg-white px-4 py-3 text-center text-base font-semibold text-ink-700 hover:bg-ink-50"
         >
           חזרה
         </Link>

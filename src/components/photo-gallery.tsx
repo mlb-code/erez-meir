@@ -9,7 +9,7 @@ export function PhotoGallery({ photos, alt }: { photos: ListingPhoto[]; alt: str
 
   if (!photos.length) {
     return (
-      <div className="flex aspect-16/10 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+      <div className="flex aspect-16/10 items-center justify-center rounded-2xl bg-ink-100 text-ink-400">
         אין תמונות למודעה הזו
       </div>
     );
@@ -21,7 +21,7 @@ export function PhotoGallery({ photos, alt }: { photos: ListingPhoto[]; alt: str
 
   return (
     <div>
-      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+      <div className="relative overflow-hidden rounded-2xl bg-ink-100">
         <img
           src={photoUrl(current.storage_path)}
           alt={alt}
@@ -34,7 +34,7 @@ export function PhotoGallery({ photos, alt }: { photos: ListingPhoto[]; alt: str
               type="button"
               onClick={() => move(-1)}
               aria-label="התמונה הקודמת"
-              className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/85 p-2 text-slate-800 shadow transition-colors hover:bg-white"
+              className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/85 p-2 text-ink-800 shadow transition-colors hover:bg-white"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -44,13 +44,13 @@ export function PhotoGallery({ photos, alt }: { photos: ListingPhoto[]; alt: str
               type="button"
               onClick={() => move(1)}
               aria-label="התמונה הבאה"
-              className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/85 p-2 text-slate-800 shadow transition-colors hover:bg-white"
+              className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/85 p-2 text-ink-800 shadow transition-colors hover:bg-white"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <span className="num absolute bottom-3 left-3 rounded-lg bg-slate-900/70 px-2 py-1 text-xs font-semibold text-white">
+            <span className="num absolute bottom-3 left-3 rounded-lg bg-ink-900/70 px-2 py-1 text-xs font-semibold text-white">
               {index + 1} / {photos.length}
             </span>
           </>

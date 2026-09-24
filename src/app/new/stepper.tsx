@@ -18,14 +18,14 @@ export function Stepper({ current, listingId }: { current: number; listingId?: s
                   ? 'bg-brand-600 text-white'
                   : state === 'done'
                     ? 'bg-brand-100 text-brand-700'
-                    : 'bg-slate-200 text-slate-500'
+                    : 'bg-ink-200 text-ink-500'
               }`}
             >
               {step}
             </span>
             <span
               className={`hidden text-sm font-medium sm:inline ${
-                state === 'current' ? 'text-brand-800' : 'text-slate-500'
+                state === 'current' ? 'text-brand-800' : 'text-ink-500'
               }`}
             >
               {label}
@@ -44,7 +44,7 @@ export function Stepper({ current, listingId }: { current: number; listingId?: s
             )}
             {step < STEPS.length && (
               <span
-                className={`h-0.5 flex-1 rounded ${step < current ? 'bg-brand-300' : 'bg-slate-200'}`}
+                className={`h-0.5 flex-1 rounded ${step < current ? 'bg-brand-300' : 'bg-ink-200'}`}
               />
             )}
           </li>

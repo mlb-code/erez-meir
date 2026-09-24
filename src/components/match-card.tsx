@@ -10,13 +10,13 @@ const STATUS_TEXT: Record<EnrichedMatch['status'], { label: string; className: s
     label: 'ממתין לשאר המשתתפים',
     className: 'bg-chain-100 text-chain-800',
   },
-  all_interested: { label: 'כולם אישרו', className: 'bg-emerald-100 text-emerald-800' },
-  meeting_confirmed: { label: 'אישור הפגשה נחתם', className: 'bg-emerald-100 text-emerald-800' },
+  all_interested: { label: 'כולם אישרו', className: 'bg-success-100 text-success-800' },
+  meeting_confirmed: { label: 'אישור הפגשה נחתם', className: 'bg-success-100 text-success-800' },
   in_negotiation: { label: 'במשא ומתן בלעדי', className: 'bg-brand-100 text-brand-800' },
   closing: { label: 'בסגירה', className: 'bg-brand-100 text-brand-800' },
   swapped: { label: 'הוחלפה', className: 'bg-brand-200 text-brand-900' },
-  dismissed: { label: 'ההתאמה נסגרה', className: 'bg-slate-200 text-slate-600' },
-  expired: { label: 'פג תוקף', className: 'bg-slate-200 text-slate-500' },
+  dismissed: { label: 'ההתאמה נסגרה', className: 'bg-ink-200 text-ink-600' },
+  expired: { label: 'פג תוקף', className: 'bg-ink-200 text-ink-500' },
 };
 
 export function MatchCard({ match }: { match: EnrichedMatch }) {
@@ -25,8 +25,8 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
   const canRespond = match.myResponse === null && !['dismissed', 'expired'].includes(match.status);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <header className="flex flex-wrap items-center gap-2 border-b border-slate-100 px-4 py-3">
+    <article className="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-sm">
+      <header className="flex flex-wrap items-center gap-2 border-b border-ink-100 px-4 py-3">
         <span
           className={`rounded-lg px-2.5 py-1 text-sm font-extrabold ${
             isChain ? 'bg-chain-100 text-chain-800' : 'bg-brand-100 text-brand-800'
@@ -38,7 +38,7 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
           {status.label}
         </span>
 
-        <span className="mr-auto text-sm font-bold text-slate-500">
+        <span className="mr-auto text-sm font-bold text-ink-500">
           ציון התאמה {match.score}
         </span>
       </header>
@@ -46,8 +46,8 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
       <div className="p-4">
         <ChainDiagram participants={match.participants} steps={match.steps} />
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-100 pt-4">
-          <p className="text-sm font-semibold text-slate-600">
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink-100 pt-4">
+          <p className="text-sm font-semibold text-ink-600">
             {match.interestedCount} מתוך {match.totalCount} אישרו
           </p>
           <div className="flex gap-1">
@@ -57,10 +57,10 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
                 title={`משתתף ${index + 1}`}
                 className={`h-2 w-8 rounded-full ${
                   participant.response === 'interested'
-                    ? 'bg-emerald-500'
+                    ? 'bg-success-500'
                     : participant.response === 'not_interested'
-                      ? 'bg-red-400'
-                      : 'bg-slate-200'
+                      ? 'bg-danger-400'
+                      : 'bg-ink-200'
                 }`}
               />
             ))}
@@ -86,25 +86,25 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
               <input type="hidden" name="response" value="not_interested" />
               <button
                 type="submit"
-                className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-base font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                className="rounded-xl border border-ink-300 bg-white px-4 py-3 text-base font-semibold text-ink-600 transition-colors hover:bg-ink-50"
               >
                 לא רלוונטי
               </button>
             </form>
           </div>
         ) : isOpenMatchState(match.status) ? (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-4">
-            <p className="font-bold text-emerald-900">כל המשתתפים אישרו. הצ&apos;אט הקבוצתי נפתח.</p>
+          <div className="mt-4 rounded-xl bg-success-50 p-4">
+            <p className="font-bold text-success-900">כל המשתתפים אישרו. הצ&apos;אט הקבוצתי נפתח.</p>
             <ContactList match={match} />
             <Link
               href={`/matches/${match.id}`}
-              className="mt-3 inline-block rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+              className="mt-3 inline-block rounded-xl bg-success-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-success-800"
             >
               לצ&apos;אט המשותף
             </Link>
           </div>
         ) : match.status === 'dismissed' || match.status === 'expired' ? (
-          <p className="mt-4 rounded-xl bg-slate-100 p-4 text-sm text-slate-600">
+          <p className="mt-4 rounded-xl bg-ink-100 p-4 text-sm text-ink-600">
             {match.status === 'expired' ? 'אחת המודעות במעגל כבר לא פעילה, ולכן המעגל פג.' : 'אחד המשתתפים סימן שההחלפה לא רלוונטית, ולכן המעגל הזה נסגר.'}
           </p>
         ) : (
@@ -113,7 +113,7 @@ export function MatchCard({ match }: { match: EnrichedMatch }) {
           </p>
         )}
 
-        <p className="mt-4 text-xs leading-relaxed text-slate-400">{LEGAL_DISCLAIMER}</p>
+        <p className="mt-4 text-xs leading-relaxed text-ink-400">{LEGAL_DISCLAIMER}</p>
       </div>
     </article>
   );
@@ -124,7 +124,7 @@ function ContactList({ match }: { match: EnrichedMatch }) {
   if (!others.some((participant) => participant.ownerName || participant.ownerPhone)) return null;
 
   return (
-    <ul className="mt-3 flex flex-col gap-1 text-sm text-emerald-900">
+    <ul className="mt-3 flex flex-col gap-1 text-sm text-success-900">
       {others.map((participant) => (
         <li key={participant.listing.id}>
           <span className="font-semibold">{participant.ownerName ?? 'בעל דירה'}</span>

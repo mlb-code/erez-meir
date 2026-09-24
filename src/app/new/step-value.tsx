@@ -45,7 +45,7 @@ export function StepValue({ listing }: { listing: Listing }) {
         </div>
         <Link
           href={`/new?id=${listing.id}&step=2`}
-          className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-base font-semibold text-slate-700 hover:bg-slate-50"
+          className="rounded-xl border border-ink-300 bg-white px-4 py-3 text-center text-base font-semibold text-ink-700 hover:bg-ink-50"
         >
           חזרה
         </Link>

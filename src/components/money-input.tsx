@@ -38,7 +38,7 @@ export function MoneyInput({
           dir="ltr"
           className={`${inputClass} text-left pl-10`}
         />
-        <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-slate-400">
+        <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-400">
           ₪
         </span>
       </div>

@@ -65,9 +65,9 @@ export default async function NewListingPage({
     <div className="mx-auto max-w-2xl px-4 py-8">
       <Stepper current={step} listingId={listing?.id} />
 
-      <h1 className="mt-6 text-2xl font-extrabold text-slate-900">{TITLES[step - 1]}</h1>
+      <h1 className="mt-6 text-2xl font-extrabold text-ink-900">{TITLES[step - 1]}</h1>
       {listing && listing.status !== 'draft' && (
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-ink-500">
           אתה עורך מודעה שכבר פורסמה. השינויים ייכנסו לתוקף מיד עם השמירה.
         </p>
       )}

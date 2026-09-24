@@ -14,9 +14,9 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
     >
-      <div className="relative aspect-16/10 bg-slate-100">
+      <div className="relative aspect-16/10 bg-ink-100">
         {cover ? (
           <img
             src={photoUrl(cover.storage_path)}
@@ -25,20 +25,20 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-slate-400">
+          <div className="flex h-full items-center justify-center text-sm text-ink-400">
             ללא תמונה
           </div>
         )}
-        <span className="absolute bottom-2 right-2 rounded-lg bg-slate-900/80 px-2.5 py-1 text-sm font-bold text-white">
+        <span className="absolute bottom-2 right-2 rounded-lg bg-ink-900/80 px-2.5 py-1 text-sm font-bold text-white">
           {formatCurrency(listing.asking_value)}
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-base font-bold text-slate-900">
+        <h3 className="text-base font-bold text-ink-900">
           {formatRooms(listing.rooms)} ב{listing.city}
         </h3>
-        <p className="mt-0.5 text-sm text-slate-500">
+        <p className="mt-0.5 text-sm text-ink-500">
           {listing.neighborhood ?? 'ללא שכונה'} · {listing.size_sqm} מ״ר
           {listing.floor !== null && ` · קומה ${listing.floor}`}
         </p>
@@ -48,7 +48,7 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
             {features.map((feature) => (
               <li
                 key={feature}
-                className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
+                className="rounded-md bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600"
               >
                 {feature}
               </li>

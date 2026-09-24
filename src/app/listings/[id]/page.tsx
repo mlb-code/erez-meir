@@ -82,24 +82,24 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
       <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+          <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">
             {formatRooms(listing.rooms)} ב{listing.city}
           </h1>
-          <p className="mt-1 text-slate-500">{describeAddress(listing)}</p>
+          <p className="mt-1 text-ink-500">{describeAddress(listing)}</p>
         </div>
         <div className="text-left">
           <p className="text-2xl font-extrabold text-brand-700">
             {formatCurrency(listing.asking_value)}
           </p>
-          <p className="text-xs text-slate-500">{formatCurrencyExact(listing.asking_value)}</p>
+          <p className="text-xs text-ink-500">{formatCurrencyExact(listing.asking_value)}</p>
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-3">
+      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink-200 bg-ink-200 sm:grid-cols-3">
         {specs.map((spec) => (
           <div key={spec.label} className="bg-white p-4">
-            <dt className="text-xs font-semibold text-slate-500">{spec.label}</dt>
-            <dd className="mt-1 text-sm font-bold text-slate-900">{spec.value}</dd>
+            <dt className="text-xs font-semibold text-ink-500">{spec.label}</dt>
+            <dd className="mt-1 text-sm font-bold text-ink-900">{spec.value}</dd>
           </div>
         ))}
       </dl>
@@ -109,7 +109,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
           {features.map((feature) => (
             <li
               key={feature}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700"
+              className="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm font-medium text-ink-700"
             >
               {feature}
             </li>
@@ -119,8 +119,8 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
       {listing.description && (
         <section className="mt-6">
-          <h2 className="text-lg font-bold text-slate-900">על הדירה</h2>
-          <p className="mt-2 leading-relaxed whitespace-pre-line text-slate-700">
+          <h2 className="text-lg font-bold text-ink-900">על הדירה</h2>
+          <p className="mt-2 leading-relaxed whitespace-pre-line text-ink-700">
             {listing.description}
           </p>
         </section>
@@ -165,18 +165,18 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       {/* קריאה לפעולה */}
       <section className="mt-6">
         {isMine ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="font-semibold text-slate-800">זו המודעה שלך.</p>
+          <div className="rounded-2xl border border-ink-200 bg-white p-5">
+            <p className="font-semibold text-ink-800">זו המודעה שלך.</p>
             <Link
               href="/account"
-              className="mt-3 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-700"
+              className="mt-3 inline-block rounded-xl bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-700"
             >
               לעריכת המודעה
             </Link>
           </div>
         ) : !user ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-slate-700">
+          <div className="rounded-2xl border border-ink-200 bg-white p-5">
+            <p className="text-ink-700">
               כדי לבדוק אם הדירה שלך מתאימה להחלפה הזו צריך להתחבר ולפרסם מודעה.
             </p>
             <Link
@@ -187,8 +187,8 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             </Link>
           </div>
         ) : !hasActiveListing ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-slate-700">
+          <div className="rounded-2xl border border-ink-200 bg-white p-5">
+            <p className="text-ink-700">
               כדי להיכנס למעגלי ההחלפה צריך שתהיה לך מודעה פעילה משלך.
             </p>
             <Link
@@ -199,9 +199,9 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             </Link>
           </div>
         ) : (
-          <form action={findMatchWith} className="rounded-2xl border border-slate-200 bg-white p-5">
+          <form action={findMatchWith} className="rounded-2xl border border-ink-200 bg-white p-5">
             <input type="hidden" name="listing_id" value={listing.id} />
-            <p className="text-slate-700">
+            <p className="text-ink-700">
               נבדוק אם יש בין הדירות שלכם החלפה ישירה, או מעגל שכולל עוד בעלי דירות.
             </p>
             <button
@@ -214,7 +214,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
         )}
       </section>
 
-      <p className="mt-6 rounded-xl bg-slate-100 p-4 text-xs leading-relaxed text-slate-500">
+      <p className="mt-6 rounded-xl bg-ink-100 p-4 text-xs leading-relaxed text-ink-500">
         {LEGAL_DISCLAIMER}
       </p>
     </div>

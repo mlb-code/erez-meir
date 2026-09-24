@@ -13,14 +13,14 @@ import type { ListingStatus, Profile } from '@/lib/types';
 export const metadata: Metadata = { title: 'האזור האישי' };
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
-  draft: 'bg-slate-200 text-slate-700',
+  draft: 'bg-ink-200 text-ink-700',
   pending_ownership: 'bg-chain-100 text-chain-800',
-  ownership_rejected: 'bg-red-100 text-red-800',
+  ownership_rejected: 'bg-danger-100 text-danger-800',
   closing: 'bg-brand-100 text-brand-800',
-  active: 'bg-emerald-100 text-emerald-800',
+  active: 'bg-success-100 text-success-800',
   in_negotiation: 'bg-chain-100 text-chain-800',
   swapped: 'bg-brand-100 text-brand-800',
-  archived: 'bg-slate-200 text-slate-500',
+  archived: 'bg-ink-200 text-ink-500',
 };
 
 /** לאיזה סטטוס אפשר לעבור מכל סטטוס. */
@@ -47,21 +47,21 @@ export default async function AccountPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">האזור האישי</h1>
+      <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">האזור האישי</h1>
 
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-        <h2 className="mb-4 text-lg font-bold text-slate-900">הפרטים שלי</h2>
+      <section className="mt-6 rounded-2xl border border-ink-200 bg-white p-5">
+        <h2 className="mb-4 text-lg font-bold text-ink-900">הפרטים שלי</h2>
         <ProfileForm profile={profile as Profile | null} email={user.email ?? ''} />
-        <div className="mt-4 flex flex-wrap gap-3 border-t border-slate-100 pt-4 text-sm">
+        <div className="mt-4 flex flex-wrap gap-3 border-t border-ink-100 pt-4 text-sm">
           <Link href="/documents/terms" className="font-semibold text-brand-700 hover:underline">תנאי השירות</Link>
           <Link href="/documents/privacy" className="font-semibold text-brand-700 hover:underline">מדיניות הפרטיות</Link>
-          <span className="text-slate-400">— צפייה וחתימה דיגיטלית</span>
+          <span className="text-ink-400">— צפייה וחתימה דיגיטלית</span>
         </div>
       </section>
 
       <section className="mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-bold text-slate-900">המודעות שלי</h2>
+          <h2 className="text-lg font-bold text-ink-900">המודעות שלי</h2>
           <Link
             href="/new"
             className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
@@ -71,7 +71,7 @@ export default async function AccountPage() {
         </div>
 
         {listings.length === 0 ? (
-          <p className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+          <p className="mt-4 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
             עוד לא פרסמת מודעה. ברגע שתפרסם, נתחיל לחפש עבורך התאמות ומעגלי החלפה.
           </p>
         ) : (
@@ -83,7 +83,7 @@ export default async function AccountPage() {
               return (
                 <li
                   key={listing.id}
-                  className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                  className="rounded-2xl border border-ink-200 bg-white p-4 shadow-sm"
                 >
                   <div className="flex gap-3">
                     {cover ? (
@@ -93,14 +93,14 @@ export default async function AccountPage() {
                         className="h-20 w-24 shrink-0 rounded-xl object-cover"
                       />
                     ) : (
-                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400">
+                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-xl bg-ink-100 text-xs text-ink-400">
                         ללא תמונה
                       </div>
                     )}
 
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-bold text-slate-900">
+                        <h3 className="font-bold text-ink-900">
                           {formatRooms(listing.rooms)} ב{listing.city}
                         </h3>
                         <span
@@ -109,7 +109,7 @@ export default async function AccountPage() {
                           {STATUS_LABELS[status]}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-1 text-sm text-ink-500">
                         {listing.size_sqm} מ״ר
                         {listing.neighborhood ? ` · ${listing.neighborhood}` : ''}
                       </p>
@@ -121,10 +121,10 @@ export default async function AccountPage() {
                     </div>
                   </div>
 
-                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-ink-100 pt-3">
                     <Link
                       href={`/new?id=${listing.id}&step=1`}
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                      className="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
                     >
                       {status === 'draft' ? 'המשך מילוי הטיוטה' : 'עריכה'}
                     </Link>
@@ -132,7 +132,7 @@ export default async function AccountPage() {
                     {status !== 'draft' && (
                       <Link
                         href={`/listings/${listing.id}`}
-                        className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                        className="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
                       >
                         צפייה במודעה
                       </Link>
@@ -144,7 +144,7 @@ export default async function AccountPage() {
                         <input type="hidden" name="status" value={next} />
                         <button
                           type="submit"
-                          className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                          className="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
                         >
                           סימון כ{STATUS_LABELS[next]}
                         </button>

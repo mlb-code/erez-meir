@@ -26,16 +26,16 @@ export default async function HomePage() {
   return (
     <div>
       {/* ===== Hero ===== */}
-      <section className="border-b border-slate-200 bg-white">
+      <section className="border-b border-ink-200 bg-white">
         <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-12 lg:grid-cols-2 lg:py-20">
           <div>
             <span className="inline-block rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">
               הראשונה בישראל לעסקאות חליפין בנדל״ן
             </span>
-            <h1 className="mt-4 text-3xl leading-tight font-extrabold text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 text-3xl leading-tight font-extrabold text-ink-900 sm:text-4xl lg:text-5xl">
               במקום למכור דירה ואז לקנות אחרת — פשוט מחליפים
             </h1>
-            <p className="mt-4 text-lg leading-relaxed text-slate-600">
+            <p className="mt-4 text-lg leading-relaxed text-ink-600">
               מפרסמים את הדירה שלכם להחלפה, מגדירים מה אתם מחפשים בתמורה, והמערכת מוצאת את
               ההתאמה. גם כשצריך מעגל של שלושה או ארבעה בעלי דירות כדי לסגור אותה.
             </p>
@@ -49,7 +49,7 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/listings"
-                className="rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-bold text-slate-700 transition-colors hover:bg-slate-50"
+                className="rounded-xl border border-ink-300 bg-white px-6 py-3.5 text-base font-bold text-ink-700 transition-colors hover:bg-ink-50"
               >
                 לצפייה בלוח ההחלפות
               </Link>
@@ -61,17 +61,17 @@ export default async function HomePage() {
       </section>
 
       {/* ===== איך זה עובד ===== */}
-      <section id="how-it-works" className="scroll-mt-20 bg-slate-50">
+      <section id="how-it-works" className="scroll-mt-20 bg-ink-50">
         <div className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">איך זה עובד</h2>
+          <h2 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">איך זה עובד</h2>
           <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {STEPS.map((step, index) => (
-              <li key={step.title} className="rounded-2xl border border-slate-200 bg-white p-6">
+              <li key={step.title} className="rounded-2xl border border-ink-200 bg-white p-6">
                 <span className="num flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-lg font-extrabold text-white">
                   {index + 1}
                 </span>
-                <h3 className="mt-4 text-lg font-bold text-slate-900">{step.title}</h3>
-                <p className="mt-2 leading-relaxed text-slate-600">{step.body}</p>
+                <h3 className="mt-4 text-lg font-bold text-ink-900">{step.title}</h3>
+                <p className="mt-2 leading-relaxed text-ink-600">{step.body}</p>
               </li>
             ))}
           </ol>
@@ -112,16 +112,16 @@ export default async function HomePage() {
       </section>
 
       {/* ===== חיפוש מהיר ===== */}
-      <section className="bg-slate-50">
+      <section className="bg-ink-50">
         <div className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="text-2xl font-extrabold text-slate-900">חיפוש מהיר לפי עיר</h2>
-          <p className="mt-2 text-slate-600">מה מוצע כרגע להחלפה באזור שמעניין אתכם?</p>
+          <h2 className="text-2xl font-extrabold text-ink-900">חיפוש מהיר לפי עיר</h2>
+          <p className="mt-2 text-ink-600">מה מוצע כרגע להחלפה באזור שמעניין אתכם?</p>
           <div className="mt-5 flex flex-wrap gap-2">
             {CITIES.map((city) => (
               <Link
                 key={city}
                 href={`/listings?city=${encodeURIComponent(city)}`}
-                className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-800"
+                className="rounded-xl border border-ink-300 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-800"
               >
                 {city}
               </Link>
@@ -136,8 +136,8 @@ export default async function HomePage() {
           <div className="mx-auto max-w-5xl px-4 py-14">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900">מודעות אחרונות</h2>
-                <p className="mt-2 text-slate-600">
+                <h2 className="text-2xl font-extrabold text-ink-900">מודעות אחרונות</h2>
+                <p className="mt-2 text-ink-600">
                   בכל מודעה רואים גם מה הבעלים מחפש בתמורה.
                 </p>
               </div>

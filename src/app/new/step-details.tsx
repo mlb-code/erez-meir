@@ -131,12 +131,12 @@ export function StepDetails({ listing }: { listing: Listing | null }) {
       </div>
 
       <fieldset>
-        <legend className="mb-2 text-sm font-semibold text-slate-700">מה יש בדירה</legend>
+        <legend className="mb-2 text-sm font-semibold text-ink-700">מה יש בדירה</legend>
         <div className="flex flex-wrap gap-2">
           {AMENITIES.map((amenity) => (
             <label
               key={amenity.name}
-              className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-sm font-medium text-ink-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
             >
               <input
                 type="checkbox"

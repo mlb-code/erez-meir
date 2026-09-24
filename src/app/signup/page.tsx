@@ -12,8 +12,8 @@ export default async function SignupPage() {
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-10 sm:py-16">
-      <h1 className="text-2xl font-extrabold text-slate-900">פתיחת חשבון</h1>
-      <p className="mt-2 text-sm text-slate-600">
+      <h1 className="text-2xl font-extrabold text-ink-900">פתיחת חשבון</h1>
+      <p className="mt-2 text-sm text-ink-600">
         כבר יש לך חשבון?{' '}
         <Link href="/login" className="font-semibold text-brand-700 hover:underline">
           להתחברות
@@ -24,7 +24,7 @@ export default async function SignupPage() {
         <SignupForm />
       </div>
 
-      <p className="mt-6 text-xs leading-relaxed text-slate-500">
+      <p className="mt-6 text-xs leading-relaxed text-ink-500">
         אחרי ההרשמה נשלח אליך מייל אימות. הפרטים האישיים שלך אינם מוצגים בלוח ההחלפות, ונחשפים רק
         לצדדים שאישרו יחד את אותה החלפה.
       </p>

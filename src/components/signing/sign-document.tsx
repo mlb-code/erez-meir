@@ -57,49 +57,49 @@ export function SignDocument({
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white">
-      <header className="border-b border-slate-100 px-5 py-4">
-        <h2 className="text-lg font-extrabold text-slate-900">{title}</h2>
-        <p className="mt-1 text-xs text-slate-500">
+    <section className="rounded-2xl border border-ink-200 bg-white">
+      <header className="border-b border-ink-100 px-5 py-4">
+        <h2 className="text-lg font-extrabold text-ink-900">{title}</h2>
+        <p className="mt-1 text-xs text-ink-500">
           יש לקרוא את המסמך עד סופו. הנוסח שיישמר מזוהה בחתימה דיגיטלית:
-          <span className="mr-1 font-mono text-[11px] text-slate-400" dir="ltr">{hash.slice(0, 16)}…</span>
+          <span className="mr-1 font-mono text-[11px] text-ink-400" dir="ltr">{hash.slice(0, 16)}…</span>
         </p>
       </header>
 
       <div
         ref={boxRef}
         onScroll={(e) => { const el = e.currentTarget; if (el.scrollTop + el.clientHeight >= el.scrollHeight - 8) setScrolledToEnd(true); }}
-        className="max-h-[50vh] overflow-y-auto px-5 py-4 text-sm leading-relaxed whitespace-pre-wrap text-slate-800"
+        className="max-h-[50vh] overflow-y-auto px-5 py-4 text-sm leading-relaxed whitespace-pre-wrap text-ink-800"
       >
         {text}
       </div>
 
-      <footer className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4">
+      <footer className="flex flex-col gap-3 border-t border-ink-100 px-5 py-4">
         {!scrolledToEnd && <p className="text-xs font-semibold text-chain-800">גלול עד סוף המסמך כדי להמשיך.</p>}
-        {hashMismatch && <p className="text-xs font-semibold text-red-700">הנוסח שהוצג אינו תואם לנוסח בשרת. יש לרענן את הדף.</p>}
+        {hashMismatch && <p className="text-xs font-semibold text-danger-700">הנוסח שהוצג אינו תואם לנוסח בשרת. יש לרענן את הדף.</p>}
 
-        <label className="flex items-start gap-2 text-sm text-slate-800">
+        <label className="flex items-start gap-2 text-sm text-ink-800">
           <input type="checkbox" checked={agreed} disabled={!scrolledToEnd || !!done} onChange={(e) => setAgreed(e.target.checked)} className="mt-1 h-4 w-4 accent-brand-600" />
           <span>קראתי את המסמך במלואו ואני מסכים לתוכנו.</span>
         </label>
 
         {verificationMethod === 'sms' && !done && (
           <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-slate-700">קוד אימות שנשלח לטלפון</span>
+            <span className="mb-1 block text-sm font-semibold text-ink-700">קוד אימות שנשלח לטלפון</span>
             <input value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} inputMode="numeric" maxLength={6} dir="ltr"
-              className="w-40 rounded-xl border border-slate-300 px-3 py-2 text-left text-base tracking-widest" />
+              className="w-40 rounded-xl border border-ink-300 px-3 py-2 text-left text-base tracking-widest" />
           </label>
         )}
 
-        {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
+        {error && <p role="alert" className="rounded-xl border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-800">{error}</p>}
 
         {done ? (
-          <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
+          <p role="status" className="rounded-xl border border-success-200 bg-success-50 px-4 py-3 text-sm font-semibold text-success-900">
             {done.alreadySigned ? 'המסמך הזה כבר נחתם על ידך.' : 'נחתם. עותק נשמר בחשבונך ויישלח לאימייל.'}
           </p>
         ) : (
           <button type="button" onClick={submit} disabled={!canSign}
-            className="rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-slate-300">
+            className="rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300">
             {pending ? 'חותם…' : 'חתימה דיגיטלית'}
           </button>
         )}

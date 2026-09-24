@@ -1,22 +1,37 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   מערכת העיצוב של חליפין (חבילה A3)
+   כל הטוקנים מוגדרים כאן ורק כאן. קומפוננטות הבסיס ב-src/components/ui
+   צורכות אותם, והדפים צורכים את הקומפוננטות. אפשר לראות הכול ב-/design.
+   ========================================================================= */
+
 @theme {
   --font-sans: var(--font-heebo), ui-sans-serif, system-ui, sans-serif;
 
-  /* צבע המותג — טורקיז עמוק */
-  --color-brand-50: #eefbf8;
-  --color-brand-100: #d3f4ee;
-  --color-brand-200: #abe9df;
-  --color-brand-300: #74d7cb;
-  --color-brand-400: #3dbcb0;
-  --color-brand-500: #23a096;
-  --color-brand-600: #16807a;
-  --color-brand-700: #156762;
-  --color-brand-800: #155250;
-  --color-brand-900: #144543;
-  --color-brand-950: #04292a;
+  /* ---------------------------------------------------------------------
+     פלטה
+     --------------------------------------------------------------------- */
 
-  /* צבע השרשראות — ענבר, כדי להבדיל ויזואלית מהתאמה ישירה */
+  /* ראשי — טורקיז־פטרול.
+     נבחר ולא כחול: מבדיל את חליפין מהבנקים ומלוחות הנדל"ן הישראליים,
+     ונקרא רגוע ואמין — מה שצריך במוצר שמלווה את העסקה הגדולה בחיים.
+     600 = מילוי כפתור (לבן עליו 4.8:1), 700 = טקסט וקישורים על לבן (6.7:1). */
+  --color-brand-50: #ecfbf7;
+  --color-brand-100: #cff5eb;
+  --color-brand-200: #a3ead9;
+  --color-brand-300: #6dd8c3;
+  --color-brand-400: #38bda8;
+  --color-brand-500: #17a08d;
+  --color-brand-600: #0c8174;
+  --color-brand-700: #0d6760;
+  --color-brand-800: #0f524e;
+  --color-brand-900: #0f4340;
+  --color-brand-950: #032826;
+
+  /* משני — ענבר. כמעט משלים לטורקיז, ולכן תג "שרשרת" ותג "התאמה ישירה"
+     נפרדים מיד לעין — כולל בעיוורון צבעים אדום־ירוק, ששומר על ציר כחול־צהוב.
+     השם chain נשאר כי זה בדיוק תפקידו במוצר: המסלול הרב־משתתפי. */
   --color-chain-50: #fff9ed;
   --color-chain-100: #fff1d4;
   --color-chain-200: #ffdfa8;
@@ -27,6 +42,114 @@
   --color-chain-700: #c55007;
   --color-chain-800: #9c3f0e;
   --color-chain-900: #7e360f;
+
+  /* הצלחה — ירוק צהבהב, רחוק מספיק מהטורקיז הראשי כדי לא להתבלבל איתו */
+  --color-success-50: #ecfdf3;
+  --color-success-100: #d2f8e0;
+  --color-success-200: #a8efc6;
+  --color-success-300: #6fdfa5;
+  --color-success-400: #37c67f;
+  --color-success-500: #14a862;
+  --color-success-600: #0a8a50;
+  --color-success-700: #096d42;
+  --color-success-800: #0b5637;
+  --color-success-900: #0a472f;
+
+  /* אזהרה — זהב־חרדל. גוון ~45° מול ~25° של הענבר, והרקעים נבדלים לעין
+     (#fefce8 צהבהב מול #fff9ed כתמתם). בכל מקרה אזהרה אף פעם לא מסומנת
+     בצבע בלבד — תמיד אייקון + מילה בעברית. */
+  --color-warning-50: #fefce8;
+  --color-warning-100: #fdf6c7;
+  --color-warning-200: #fbe98c;
+  --color-warning-300: #f7d64f;
+  --color-warning-400: #f2bd1c;
+  --color-warning-500: #dfa009;
+  --color-warning-600: #b87d06;
+  --color-warning-700: #92610b;
+  --color-warning-800: #784f10;
+  --color-warning-900: #653f12;
+
+  /* שגיאה */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+  --color-danger-900: #7f1d1d;
+
+  /* ניטרלי 1 — סולם הטקסט והמשטחים. אפור קריר עם נטייה קלה לטורקיז,
+     כדי שיישב עם הצבע הראשי במקום להתנגש בו.
+     500 הוא הגבול התחתון לטקסט עזר על לבן (4.9:1). */
+  --color-ink-50: #f6f9f9;
+  --color-ink-100: #edf2f3;
+  --color-ink-200: #dde5e7;
+  --color-ink-300: #c2cdd1;
+  --color-ink-400: #90a0a6;
+  --color-ink-500: #63747a;
+  --color-ink-600: #4c5b61;
+  --color-ink-700: #3d494e;
+  --color-ink-800: #2e383c;
+  --color-ink-900: #1a2326;
+  --color-ink-950: #0c1214;
+
+  /* ניטרלי 2 — קווים ומפרידים */
+  --color-line: var(--color-ink-200);
+  --color-line-strong: var(--color-ink-300);
+
+  /* ניטרלי 3 — משטחים */
+  --color-surface: #ffffff;
+  --color-canvas: var(--color-ink-50);
+
+  /* ---------------------------------------------------------------------
+     טיפוגרפיה — חמישה גדלים. Heebo נטען ב-layout.
+     גובה השורה נדיב יותר מהמקובל ב-Latin: עברית ללא ניקוד צריכה אוויר.
+     מתחת ל-caption נשאר רק text-xs של Tailwind, לחיווי (תגים, מונים) ולא לתוכן.
+     --------------------------------------------------------------------- */
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 800;
+
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.3;
+  --text-title--letter-spacing: -0.01em;
+  --text-title--font-weight: 800;
+
+  --text-heading: 1.125rem;
+  --text-heading--line-height: 1.4;
+  --text-heading--font-weight: 700;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.55;
+
+  /* ---------------------------------------------------------------------
+     רדיוסים — חמישה, לפי תפקיד ולא לפי גודל
+     --------------------------------------------------------------------- */
+  --radius-chip: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+  --radius-pill: 9999px;
+
+  /* ---------------------------------------------------------------------
+     צללים — מגוונים ב-ink ולא בשחור טהור, כדי שלא יאפירו את הפלטה החמה
+     --------------------------------------------------------------------- */
+  --shadow-card: 0 1px 2px 0 rgb(26 35 38 / 0.05), 0 1px 3px 0 rgb(26 35 38 / 0.06);
+  --shadow-raised: 0 2px 6px -2px rgb(26 35 38 / 0.08), 0 8px 20px -6px rgb(26 35 38 / 0.12);
+  --shadow-overlay: 0 12px 32px -8px rgb(26 35 38 / 0.2), 0 2px 8px -2px rgb(26 35 38 / 0.1);
+
+  /* ---------------------------------------------------------------------
+     ריווח — שוליים אופקיים של דף, ומקצב אנכי בין מקטעים
+     --------------------------------------------------------------------- */
+  --spacing-gutter: 1rem;
+  --spacing-section: 3.5rem;
 }
 
 :root {
@@ -38,9 +161,11 @@ html {
 }
 
 body {
-  background-color: var(--color-slate-50);
-  color: var(--color-slate-900);
+  background-color: var(--color-canvas);
+  color: var(--color-ink-900);
   font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 

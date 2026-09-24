@@ -34,8 +34,8 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         </Field>
       </div>
 
-      <p className="text-sm text-slate-500">
-        אימייל: <span className="num font-semibold text-slate-700">{email}</span>
+      <p className="text-sm text-ink-500">
+        אימייל: <span className="num font-semibold text-ink-700">{email}</span>
       </p>
 
       <div className="sm:w-48">

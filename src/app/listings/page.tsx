@@ -34,8 +34,8 @@ export default async function ListingsPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">לוח ההחלפות</h1>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <h1 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">לוח ההחלפות</h1>
+        <p className="mt-2 max-w-2xl text-ink-600">
           בכל מודעה מופיע גם מה הבעלים מחפש בתמורה — כך אפשר לראות מיד אם יש כאן החלפה אפשרית,
           ולא רק דירה למכירה.
         </p>
@@ -44,7 +44,7 @@ export default async function ListingsPage({
       <ListingFilters values={values} resultCount={listings.length} />
 
       {listings.length === 0 ? (
-        <p className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+        <p className="mt-10 rounded-2xl border border-dashed border-ink-300 bg-white p-10 text-center text-ink-500">
           לא נמצאו מודעות שמתאימות לסינון. אפשר להרחיב את הטווחים או לנקות את הסינון.
         </p>
       ) : (

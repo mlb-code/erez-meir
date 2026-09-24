@@ -55,10 +55,10 @@ export function Chat({
   }
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200 bg-white">
+    <div className="flex flex-col rounded-2xl border border-ink-200 bg-white">
       <div className="flex max-h-[60vh] min-h-64 flex-col gap-3 overflow-y-auto p-4">
         {messages.length === 0 ? (
-          <p className="my-auto text-center text-sm text-slate-400">
+          <p className="my-auto text-center text-sm text-ink-400">
             עוד לא נכתבו הודעות. אפשר לפתוח ולהציע זמן לסיבוב בדירות.
           </p>
         ) : (
@@ -68,17 +68,17 @@ export function Chat({
               <div key={message.id} className={`flex ${isMine ? 'justify-start' : 'justify-end'}`}>
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
-                    isMine ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-900'
+                    isMine ? 'bg-brand-600 text-white' : 'bg-ink-100 text-ink-900'
                   }`}
                 >
                   {!isMine && (
-                    <p className="text-xs font-bold text-slate-500">
+                    <p className="text-xs font-bold text-ink-500">
                       {names[message.sender_id] ?? 'משתתף'}
                     </p>
                   )}
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.body}</p>
                   <p
-                    className={`num mt-1 text-[11px] ${isMine ? 'text-brand-100' : 'text-slate-400'}`}
+                    className={`num mt-1 text-[11px] ${isMine ? 'text-brand-100' : 'text-ink-400'}`}
                   >
                     {formatMessageTime(message.created_at)}
                   </p>
@@ -93,7 +93,7 @@ export function Chat({
       <form
         ref={formRef}
         action={handleSubmit}
-        className="flex items-end gap-2 border-t border-slate-100 p-3"
+        className="flex items-end gap-2 border-t border-ink-100 p-3"
       >
         <input type="hidden" name="match_id" value={matchId} />
         <input
@@ -102,12 +102,12 @@ export function Chat({
           maxLength={2000}
           autoComplete="off"
           placeholder="כתיבת הודעה…"
-          className="flex-1 rounded-xl border border-slate-300 px-3.5 py-2.5 text-base outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+          className="flex-1 rounded-xl border border-ink-300 px-3.5 py-2.5 text-base outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
         />
         <button
           type="submit"
           disabled={sending}
-          className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:bg-slate-300"
+          className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:bg-ink-300"
         >
           {sending ? '…' : 'שליחה'}
         </button>

@@ -37,7 +37,7 @@ export function NavMenu({
             className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
               isActive(link.href)
                 ? 'bg-brand-50 text-brand-700'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'text-ink-600 hover:bg-ink-100 hover:text-ink-900'
             }`}
           >
             {link.label}
@@ -58,7 +58,7 @@ export function NavMenu({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? 'סגירת התפריט' : 'פתיחת התפריט'}
-        className="relative rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+        className="relative rounded-lg p-2 text-ink-700 hover:bg-ink-100 md:hidden"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
           {open ? (
@@ -73,14 +73,14 @@ export function NavMenu({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full border-b border-slate-200 bg-white shadow-lg md:hidden">
+        <div className="absolute inset-x-0 top-full border-b border-ink-200 bg-white shadow-lg md:hidden">
           <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-3">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-base font-medium ${
-                  isActive(link.href) ? 'bg-brand-50 text-brand-700' : 'text-slate-700'
+                  isActive(link.href) ? 'bg-brand-50 text-brand-700' : 'text-ink-700'
                 }`}
               >
                 {link.label}
@@ -91,7 +91,7 @@ export function NavMenu({
                 )}
               </Link>
             ))}
-            <div className="mt-2 border-t border-slate-100 pt-3">{children}</div>
+            <div className="mt-2 border-t border-ink-100 pt-3">{children}</div>
           </nav>
         </div>
       )}

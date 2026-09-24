@@ -21,11 +21,11 @@ export async function SiteHeader() {
       ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-ink-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
         <Link href="/" className="flex items-center gap-2.5">
           <Logo />
-          <span className="text-lg font-extrabold tracking-tight text-slate-900">החלפה</span>
+          <span className="text-lg font-extrabold tracking-tight text-ink-900">החלפה</span>
         </Link>
 
         <div className="flex-1" />
@@ -42,7 +42,7 @@ export async function SiteHeader() {
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-800"
                 >
                   התנתקות
                 </button>
@@ -52,7 +52,7 @@ export async function SiteHeader() {
             <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 transition-colors hover:bg-ink-100"
               >
                 התחברות
               </Link>

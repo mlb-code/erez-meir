@@ -8,7 +8,7 @@ const VALUE_STEPS = [
 ];
 
 const selectClass =
-  'w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 ' +
+  'w-full rounded-xl border border-ink-300 bg-white px-3 py-2.5 text-sm text-ink-900 ' +
   'outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100';
 
 export interface FilterValues {
@@ -28,11 +28,11 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
     <form
       action="/listings"
       method="get"
-      className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+      className="rounded-2xl border border-ink-200 bg-white p-4 shadow-sm"
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <label className="col-span-2 sm:col-span-1">
-          <span className="mb-1 block text-xs font-semibold text-slate-600">עיר</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">עיר</span>
           <select name="city" defaultValue={values.city ?? ''} className={selectClass}>
             <option value="">כל הערים</option>
             {CITIES.map((city) => (
@@ -44,7 +44,7 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
         </label>
 
         <label>
-          <span className="mb-1 block text-xs font-semibold text-slate-600">מחדרים</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">מחדרים</span>
           <select name="minRooms" defaultValue={values.minRooms ?? ''} className={selectClass}>
             <option value="">הכול</option>
             {ROOM_OPTIONS.map((rooms) => (
@@ -56,7 +56,7 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
         </label>
 
         <label>
-          <span className="mb-1 block text-xs font-semibold text-slate-600">עד חדרים</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">עד חדרים</span>
           <select name="maxRooms" defaultValue={values.maxRooms ?? ''} className={selectClass}>
             <option value="">הכול</option>
             {ROOM_OPTIONS.map((rooms) => (
@@ -68,7 +68,7 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
         </label>
 
         <label>
-          <span className="mb-1 block text-xs font-semibold text-slate-600">משווי</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">משווי</span>
           <select name="minValue" defaultValue={values.minValue ?? ''} className={selectClass}>
             <option value="">הכול</option>
             {VALUE_STEPS.map((value) => (
@@ -80,7 +80,7 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
         </label>
 
         <label>
-          <span className="mb-1 block text-xs font-semibold text-slate-600">עד שווי</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">עד שווי</span>
           <select name="maxValue" defaultValue={values.maxValue ?? ''} className={selectClass}>
             <option value="">הכול</option>
             {VALUE_STEPS.map((value) => (
@@ -92,7 +92,7 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
         </label>
 
         <label className="col-span-2 sm:col-span-1">
-          <span className="mb-1 block text-xs font-semibold text-slate-600">מחפש דירה ב…</span>
+          <span className="mb-1 block text-xs font-semibold text-ink-600">מחפש דירה ב…</span>
           <select name="wantedCity" defaultValue={values.wantedCity ?? ''} className={selectClass}>
             <option value="">לא משנה</option>
             {CITIES.map((city) => (
@@ -112,11 +112,11 @@ export function ListingFilters({ values, resultCount }: { values: FilterValues; 
           סינון
         </button>
         {hasFilters && (
-          <Link href="/listings" className="text-sm font-medium text-slate-500 hover:text-slate-800">
+          <Link href="/listings" className="text-sm font-medium text-ink-500 hover:text-ink-800">
             ניקוי הסינון
           </Link>
         )}
-        <span className="mr-auto text-sm text-slate-500">{resultCount} מודעות</span>
+        <span className="mr-auto text-sm text-ink-500">{resultCount} מודעות</span>
       </div>
     </form>
   );

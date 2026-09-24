@@ -55,7 +55,7 @@ export default async function ListingPublishedPage({
 
       {matches.length > 0 && (
         <div className="mt-8 flex flex-col gap-5">
-          <h2 className="text-lg font-extrabold text-slate-900">ההתאמות שנמצאו</h2>
+          <h2 className="text-lg font-extrabold text-ink-900">ההתאמות שנמצאו</h2>
           {matches.map((match) => (
             <MatchCard key={match.id} match={match} />
           ))}

@@ -21,15 +21,15 @@ export function StepWanted({ listing }: { listing: Listing }) {
       <FormAlert error={state.error} notice={state.notice} />
 
       <fieldset>
-        <legend className="mb-1 text-sm font-semibold text-slate-700">
+        <legend className="mb-1 text-sm font-semibold text-ink-700">
           באילו אזורים תרצה לקבל דירה?
         </legend>
-        <p className="mb-2.5 text-xs text-slate-500">אפשר לבחור כמה שרוצים. חובה לפחות אחד.</p>
+        <p className="mb-2.5 text-xs text-ink-500">אפשר לבחור כמה שרוצים. חובה לפחות אחד.</p>
         <div className="flex flex-wrap gap-2">
           {CITIES.map((city) => (
             <label
               key={city}
-              className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-sm font-medium text-ink-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
             >
               <input
                 type="checkbox"
@@ -89,15 +89,15 @@ export function StepWanted({ listing }: { listing: Listing }) {
       </div>
 
       <fieldset>
-        <legend className="mb-1 text-sm font-semibold text-slate-700">מה חייב להיות בדירה</legend>
-        <p className="mb-2.5 text-xs text-slate-500">
+        <legend className="mb-1 text-sm font-semibold text-ink-700">מה חייב להיות בדירה</legend>
+        <p className="mb-2.5 text-xs text-ink-500">
           כל מה שתסמן כאן הופך לתנאי סף — דירה בלעדיו לא תוצע לך.
         </p>
         <div className="flex flex-wrap gap-2">
           {FEATURE_OPTIONS.map((feature) => (
             <label
               key={feature.value}
-              className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-sm font-medium text-ink-700 has-checked:border-brand-500 has-checked:bg-brand-50 has-checked:text-brand-800"
             >
               <input
                 type="checkbox"
@@ -138,7 +138,7 @@ export function StepWanted({ listing }: { listing: Listing }) {
         </div>
         <Link
           href={`/new?id=${listing.id}&step=3`}
-          className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-base font-semibold text-slate-700 hover:bg-slate-50"
+          className="rounded-xl border border-ink-300 bg-white px-4 py-3 text-center text-base font-semibold text-ink-700 hover:bg-ink-50"
         >
           חזרה
         </Link>

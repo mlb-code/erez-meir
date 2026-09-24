@@ -38,9 +38,9 @@ export default async function DocumentPage({ params }: { params: Promise<{ kind:
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/account" className="text-sm font-medium text-brand-700 hover:underline">→ חזרה לאזור האישי</Link>
-      <h1 className="mt-4 text-2xl font-extrabold text-slate-900">{TITLES[kind as DocumentKind]}</h1>
+      <h1 className="mt-4 text-2xl font-extrabold text-ink-900">{TITLES[kind as DocumentKind]}</h1>
       {existing && (
-        <p className="mt-2 text-sm text-emerald-800">
+        <p className="mt-2 text-sm text-success-800">
           חתמת על גרסה {prepared.template.version} ב-{new Date(existing.signed_at).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' })}.
         </p>
       )}
