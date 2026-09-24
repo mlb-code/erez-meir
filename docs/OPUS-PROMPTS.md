@@ -120,3 +120,96 @@ asking_value), ואז <SignDocument ... relatedListingId={listing.id}>. התבנ
 ב-document_templates. אין לשנות את מנגנון החתימה עצמו — רק להשתמש בו. לא לגעת ב-SMS
 (SMS_ENABLED מטופל בתוך המנגנון). branch: wp/c3-brokerage-order.
 ```
+
+---
+
+# שבועות 3–4
+
+## E1 — תור התראות
+
+```
+קרא את docs/SPEC.md סעיף 11 ו-5.4 (טבלת notifications). הטבלה כבר קיימת, ו-B2 כבר מכניס אליה
+שורות (template='signed_document_copy'). משימה: (1) src/lib/notifications/: enqueue(userId, channel,
+template, payload, scheduledFor?) + 12 התבניות של §11 כפונקציות שמחזירות {subject, text, html}
+בעברית; (2) worker ב-scripts/run-notifications.mts שמושך queued שהגיע זמנם ושולח: אימייל דרך Resend
+אם RESEND_API_KEY קיים, אחרת מסמן 'sent' עם provider_id='noop' ורושם ללוג (EMAIL_ENABLED=false);
+SMS — רק אם SMS_ENABLED=true (אחרת מדלג עם status='cancelled' והערה); (3) חיבור האירועים הקיימים
+לתור: התאמה חדשה (ב-runMatching — פעם ביום לכל משתמש לכל היותר), משתתף אישר, כולם אישרו, אישור
+הפגשה נחתם/נפתח, הודעה בצ'אט שלא נקראה שעה (הוסף messages.read_at — זה שינוי סכמה! → בקש מ-Fable
+במקום, או תעד ב-SCHEMA-REQUESTS.md ותדלג על האירוע הזה); תזכורות סגירה 7/30/60/90 יום.
+בדיקות יחידה לתבניות ולתזמון. branch: wp/e1-notifications.
+```
+
+## E2 — יבוא עסקאות ציבוריות (CSV)
+
+```
+קרא את docs/SPEC.md סעיפים 0.3 (ט1), 9.1, 5.4 (public_transactions). אין API — מנהל התפעול מייצא
+Excel/CSV מאתר nadlan.gov.il לפי יישוב. משימה: scripts/import-transactions.mts <file.csv> --source
+nadlan_gov_csv: קורא CSV (UTF-8 או Windows-1255 — לזהות), ממפה עמודות בעברית (תאריך מכירה, מחיר,
+גוש, חלקה, תת חלקה, יישוב, רחוב, מספר בית, שטח, חדרים, קומה) עם מיפוי גמיש לפי כותרות,
+מחשב source_row_hash (sha256 של השורה המנורמלת), מכניס אידמפוטנטית. דוח בסוף: נקלטו/כפולים/נדחו+סיבה.
+קובץ CSV לדוגמה ב-scripts/fixtures/ עם 20 שורות מומצאות למבחן. אחרי E4 — כפתור העלאה במסך התפעול
+שקורא לאותה לוגיקה. branch: wp/e2-import-transactions.
+```
+
+## E4 — מסך התפעול
+
+```
+קרא את docs/SPEC.md סעיף 12 במלואו, 4.2, 4.6, 9.2, 13. גישה: profiles.account_type='ops' (יש
+private.is_ops() ו-RLS מתאים לכל הטבלאות). משימה: /ops עם תפריט צד, דסקטופ-פירסט, עברית:
+(1) תורים: זהויות (identity_status='submitted'), בעלויות (ownership_verifications.status='pending'),
+התראות סורק (scan_alerts.status='new'), סגירות לאישור (closings.approved_at is null), חשבוניות
+(approved ובלי invoice_number). (2) בדיקת זהות: צילום מ-identity-docs דרך signed URL ל-10 דק',
+הפרטים המוקלדים, ת"ז מלא דרך rpc ops_read_id_number, אישור/דחייה+סיבה → מעדכן profiles ו-
+identity_documents.decision. (3) בדיקת בעלות: הנסח (signed URL), extracted מול declared, ת"ז המשתמש;
+אישור → listings.ownership_status='approved' ו-status='active' (ואז runMatching); דחייה/בקשת מסמך.
+(4) התאמות: טבלה ממוינת לפי estimated_close_probability, פתיחה עם משתתפים, ציונים, exposure_log,
+צ'אט לקריאה. (5) סגירות: אישור, חישוב עמלה (fee_rate/fee_amount/vat כבר בשורה), הזנת מספר חשבונית
++ העלאת PDF ל-agreements/, "נשלח". (6) התראות סורק: false_positive / reviewing / confirmed_bypass +
+notes. (7) דשבורד: 5 המדדים של §12. כל פעולה → audit_log. משתמש ops ראשון: מיגרציה 0xx (בטווח
+שלך) שמסמנת את ops@halifin.co.il אם קיים — ותעד ב-PR איך ליצור אותו. branch: wp/e4-ops-console.
+```
+
+## E5 — חבילת ראיות ל-PDF
+
+```
+קרא את docs/SPEC.md סעיף 9.3. תלוי ב-E4. משימה: כפתור "חבילת ראיות" בעמוד מעגל במסך התפעול →
+PDF אחד (pdf-lib או @react-pdf/renderer, עברית RTL עם Heebo מוטמע): כל signed_documents של
+המשתתפים (סוג, גרסה, hash, זמן, IP, אמצעי אימות), exposure_log של המעגל, tax_simulations שהוצגו,
+לוג הצ'אט, closings. כותרת עם מזהה המעגל ותאריך הפקה, ו-hash של ה-PDF עצמו בסוף.
+branch: wp/e5-evidence-pack.
+```
+
+## E6 — חשבון מתווך
+
+```
+קרא את docs/SPEC.md סעיפים 3, 5.4 (brokers_clients), 0.1 (מתווכים). משימה: (1) בהרשמה — בחירה
+"אני מתווך" → account_type='broker' + מספר רישיון (חובה); (2) מתווך מפרסם נכס בשם לקוח: באשף,
+צעד "פרטי הלקוח" (שם, טלפון, אימייל) → יוצר/מאתר חשבון לקוח (הזמנה במייל דרך התור של E1),
+listings.broker_id = המתווך, owner_id = הלקוח; הלקוח חייב לחתום בעצמו על ההזמנה בכתב (C3) —
+המתווך לא חותם במקומו; (3) brokers_clients עם consent_document_id אחרי החתימה; (4) "הנכסים שלי"
+למתווך מציג את כל נכסי לקוחותיו, ומסך ההתאמות מציג התאמות שלהם (RLS כבר מאפשר). מתווך לא רואה
+צ'אט ולא פרטי קשר של הצד השני. branch: wp/e6-broker.
+```
+
+## E8 — נתוני דמו v2
+
+```
+קרא את docs/SPEC.md סעיף 4.3 ו-supabase/seed.sql. משימה: להרחיב את seed.sql ל-40 נכסים:
+25 הקיימים + 15 חדשים, מהם 4 מסחריים (משרד/חנות/מחסן) ו-2 קרקע, כולל כל השדות החדשים באופן
+ריאלי (גוש/חלקה מומצאים אבל בפורמט נכון, חלונות זמן, מצב משפטי מגוון, soft_prefs, שכונות
+מהטבלה). לתכנן כך שייווצרו גם: התאמה שנחסמת רק בגלל שכונה, התאמה שנחסמת רק בגלל חלון זמן,
+מעגל בכל מצב (suggested/partial/all_interested/meeting_confirmed/in_negotiation/closing/swapped/
+dismissed/expired), נכס מסחרי בהתאמה ישירה. זהויות מאומתות, ownership approved. לעדכן
+scripts/seed-matches.mts בהתאם ולוודא ש-check:e2e ו-check:signing עוברים. branch: wp/e8-seed-v2.
+```
+
+## E9 — בדיקות דפדפן + README
+
+```
+משימה: Playwright (devDependency, chromium) עם 20+ בדיקות למסע הלקוח המלא במובייל (390px)
+ובדסקטופ: הרשמה→זהות→פרסום (כל השלבים)→בעלות→הזמנה בכתב→התאמה→מעוניין→אישור הפגשה→חשיפה→
+צ'אט→סמן שנחתם, וגם: מתווך, מסך תפעול (אישור זהות ובעלות), בדיקות RTL (אין גלישה אופקית,
+אין אנגלית). npm run test:browser. README.md v2 בעברית: מה זה, איך מריצים, איך פורסים
+(railway up), כל הסקריפטים, מבנה. branch: wp/e9-browser-tests.
+```
