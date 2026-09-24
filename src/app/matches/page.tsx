@@ -30,6 +30,7 @@ export default async function MatchesPage({
   const visible = activeTab === 'chains' ? chains : direct;
 
   const hasActiveListing = myListings.some((listing) => listing.status === 'active');
+  const awaitingOwnership = myListings.some((listing) => listing.status === 'pending_ownership');
   const noMatchWithRequested =
     withListing &&
     !matches.some((match) =>
@@ -52,13 +53,30 @@ export default async function MatchesPage({
 
       {!hasActiveListing && (
         <Card tone="brand" className="mt-6">
-          <p className="text-body font-bold text-brand-900">עוד אין לך מודעה פעילה.</p>
-          <p className="mt-1 text-caption text-brand-800">
-            מעגלי החלפה נבנים בין מודעות. ברגע שתפרסם את הדירה שלך, נוכל לשבץ אותך בהם.
-          </p>
-          <ButtonLink href="/new" className="mt-3">
-            לפרסום מודעה
-          </ButtonLink>
+          {awaitingOwnership ? (
+            <>
+              <p className="text-body font-bold text-brand-900">
+                המודעה שלך ממתינה לאימות בעלות.
+              </p>
+              <p className="mt-1 text-caption text-brand-800">
+                רק נכס מאומת נכנס למנוע ההתאמות — זה מה שמבדיל את חליפין מלוח מודעות. נעדכן
+                אותך ברגע שהבדיקה תסתיים.
+              </p>
+              <ButtonLink href="/account" className="mt-3">
+                לאזור האישי
+              </ButtonLink>
+            </>
+          ) : (
+            <>
+              <p className="text-body font-bold text-brand-900">עוד אין לך מודעה פעילה.</p>
+              <p className="mt-1 text-caption text-brand-800">
+                מעגלי החלפה נבנים בין מודעות. ברגע שתפרסם את הנכס שלך, נוכל לשבץ אותך בהם.
+              </p>
+              <ButtonLink href="/new" className="mt-3">
+                לפרסום מודעה
+              </ButtonLink>
+            </>
+          )}
         </Card>
       )}
 

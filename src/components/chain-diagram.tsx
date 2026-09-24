@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { formatCurrency, photoUrl } from '@/lib/format';
-import { listingKind } from '@/lib/listing-text';
+import { describeAvailability, describeLegalStatus, listingKind } from '@/lib/listing-text';
 import type { MatchParticipant, MatchStep } from '@/lib/data/matches';
 
 /**
@@ -72,6 +72,7 @@ export function ChainDiagram({
                     </Link>
                   )}
                 </p>
+                <ListingNotes listing={listing} />
               </div>
             </div>
 
@@ -106,6 +107,29 @@ export function ChainDiagram({
         </p>
       </li>
     </ol>
+  );
+}
+
+/**
+ * מה שצריך לדעת על הנכס לפני שמחליטים אם להיפגש: מתי הוא מתפנה,
+ * ומה המצב המשפטי שהבעלים הצהיר עליו. גוש, חלקה, רחוב ומספר בית לא מופיעים
+ * כאן — הם נחשפים רק אחרי חתימה על אישור הפגשה (§4.4).
+ */
+function ListingNotes({ listing }: { listing: MatchParticipant['listing'] }) {
+  const legalNotes = describeLegalStatus(listing);
+
+  return (
+    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-500">
+      <span>מסירה: {describeAvailability(listing)}</span>
+      {legalNotes.map((note) => (
+        <span
+          key={note}
+          className="rounded-chip bg-warning-100 px-2 py-0.5 font-semibold text-warning-800"
+        >
+          {note}
+        </span>
+      ))}
+    </p>
   );
 }
 
