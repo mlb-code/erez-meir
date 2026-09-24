@@ -1,4 +1,4 @@
-import { FEATURE_LABELS } from './constants';
+import { ASSET_TYPE_LABELS, FEATURE_LABELS, RESIDENTIAL_ASSET_TYPES } from './constants';
 import { formatCurrency, formatRooms } from './format';
 import type { Listing } from './types';
 
@@ -60,4 +60,15 @@ export function describeAddress(listing: Listing): string {
 export function describeCash(cash: number): string {
   if (cash === 0) return 'ללא השלמה כספית';
   return cash > 0 ? `משלים ${formatCurrency(cash)}` : `מקבל ${formatCurrency(-cash)}`;
+}
+
+/** "3 חדרים" לדירה; "חנות" / "קרקע" לנכס שאינו מגורים. */
+export function listingKind(listing: Pick<Listing, 'rooms' | 'asset_type'>): string {
+  const type = listing.asset_type ?? 'apartment';
+  return RESIDENTIAL_ASSET_TYPES.has(type) && listing.rooms !== null ? formatRooms(listing.rooms) : ASSET_TYPE_LABELS[type];
+}
+
+/** "3 חדרים בתל אביב" לדירה; "חנות ברמת גן" לנכס אחר. */
+export function listingTitle(listing: Pick<Listing, 'rooms' | 'city' | 'asset_type'>): string {
+  return `${listingKind(listing)} ב${listing.city}`;
 }

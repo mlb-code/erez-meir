@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { formatCurrency, formatRooms, photoUrl } from '@/lib/format';
+import { formatCurrency, photoUrl } from '@/lib/format';
+import { listingKind } from '@/lib/listing-text';
 import type { MatchParticipant, MatchStep } from '@/lib/data/matches';
 
 /**
@@ -57,7 +58,7 @@ export function ChainDiagram({
                   <ResponseChip response={participant.response} />
                 </div>
                 <p className="text-caption text-ink-600">
-                  {formatRooms(listing.rooms)} · {listing.city}
+                  {listingKind(listing)} · {listing.city}
                   {listing.neighborhood ? `, ${listing.neighborhood}` : ''} · {listing.size_sqm} מ״ר
                 </p>
                 <p className="flex flex-wrap items-center gap-x-2 text-caption font-semibold text-ink-700">

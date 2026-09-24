@@ -8,12 +8,14 @@ import {
   LEGAL_DISCLAIMER,
   URBAN_RENEWAL_LABELS,
 } from '@/lib/constants';
-import { formatCurrency, formatCurrencyExact, formatRooms } from '@/lib/format';
+import { formatCurrency, formatCurrencyExact } from '@/lib/format';
 import {
   describeAddress,
   describeCashFlexibility,
   describeWantedRooms,
   listingFeatures,
+  listingKind,
+  listingTitle,
 } from '@/lib/listing-text';
 import { findMatchWith } from '@/lib/actions/matching';
 import { getListingById } from '@/lib/data/listings';
@@ -28,7 +30,7 @@ export async function generateMetadata({
   const listing = await getListingById(id);
   if (!listing) return { title: 'מודעה לא נמצאה' };
   return {
-    title: `${formatRooms(listing.rooms)} ב${listing.city} להחלפה`,
+    title: `${listingTitle(listing)} להחלפה`,
     description: listing.description ?? undefined,
   };
 }
@@ -56,7 +58,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
   const features = listingFeatures(listing);
 
   const specs: { label: string; value: string }[] = [
-    { label: 'חדרים', value: formatRooms(listing.rooms) },
+    { label: 'סוג', value: listingKind(listing) },
     { label: 'שטח', value: `${listing.size_sqm} מ״ר` },
     {
       label: 'קומה',
@@ -79,14 +81,14 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       <div className="mt-4">
         <PhotoGallery
           photos={listing.listing_photos}
-          alt={`${formatRooms(listing.rooms)} ב${listing.city}`}
+          alt={`${listingTitle(listing)}`}
         />
       </div>
 
       <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-title text-ink-900">
-            {formatRooms(listing.rooms)} ב{listing.city}
+            {listingTitle(listing)}
           </h1>
           <p className="mt-1 text-body text-ink-500">{describeAddress(listing)}</p>
         </div>

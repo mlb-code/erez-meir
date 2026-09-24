@@ -25,8 +25,9 @@ export function formatCurrencyExact(value: number | null): string {
   return `${Math.round(value).toLocaleString('he-IL')} ₪`;
 }
 
-/** "3.5 חדרים" / "3 חדרים" / "חדר אחד" */
-export function formatRooms(rooms: number): string {
+/** "3.5 חדרים" / "3 חדרים" / "חדר אחד". null (נכס שאינו מגורים) → מחרוזת ריקה. */
+export function formatRooms(rooms: number | null): string {
+  if (rooms === null) return '';
   if (rooms === 1) return 'חדר אחד';
   const text = rooms % 1 === 0 ? String(rooms) : rooms.toFixed(1);
   return `${text} חדרים`;

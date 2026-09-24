@@ -98,7 +98,8 @@ export interface Listing {
   city: string;
   neighborhood: string | null;
   street: string | null;
-  rooms: number;
+  /** null לנכס שאינו מגורים (מסחרי/קרקע). */
+  rooms: number | null;
   size_sqm: number;
   floor: number | null;
   total_floors: number | null;
@@ -149,6 +150,8 @@ export interface Listing {
   annual_yield: number | null;
   land_zoning: string | null;
   building_rights_sqm: number | null;
+  land_is_fenced: boolean | null;
+  land_is_vacant: boolean | null;
   ownership_status: OwnershipStatus | null;
   ownership_declared_all_owners: boolean;
   avm_value: number | null;

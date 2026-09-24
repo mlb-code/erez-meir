@@ -5,9 +5,10 @@ import { DeleteListingButton } from './delete-listing-button';
 import { ProfileForm } from './profile-form';
 import { Badge, Button, ButtonLink, Card, EmptyState, PageHeader, type BadgeTone } from '@/components/ui';
 import { STATUS_LABELS } from '@/lib/constants';
-import { formatCurrency, formatRooms, photoUrl } from '@/lib/format';
+import { formatCurrency, photoUrl } from '@/lib/format';
 import { setListingStatus } from '@/lib/actions/listings';
 import { getMyListings } from '@/lib/data/listings';
+import { listingTitle } from '@/lib/listing-text';
 import { createClient, getCurrentUser } from '@/lib/supabase/server';
 import type { ListingStatus, Profile } from '@/lib/types';
 
@@ -100,7 +101,7 @@ export default async function AccountPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="text-body font-bold text-ink-900">
-                          {formatRooms(listing.rooms)} ב{listing.city}
+                          {listingTitle(listing)}
                         </h3>
                         <Badge tone={STATUS_TONES[status]}>{STATUS_LABELS[status]}</Badge>
                       </div>

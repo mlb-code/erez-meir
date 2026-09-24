@@ -1,4 +1,5 @@
 import type {
+  AssetType,
   ListingStatus,
   PropertyCondition,
   PropertyFeature,
@@ -74,3 +75,10 @@ export const LEGAL_DISCLAIMER =
  */
 export const OPEN_MATCH_STATES = ['all_interested', 'meeting_confirmed', 'in_negotiation', 'closing', 'swapped'] as const;
 export const isOpenMatchState = (status: string): boolean => (OPEN_MATCH_STATES as readonly string[]).includes(status);
+
+export const ASSET_TYPE_LABELS: Record<AssetType, string> = {
+  apartment: 'דירה', penthouse: 'פנטהאוז', garden_apartment: 'דירת גן', house: 'בית פרטי',
+  office: 'משרד', shop: 'חנות', warehouse: 'מחסן', industrial: 'מבנה תעשייה',
+  land: 'קרקע', parking: 'חניה', storage: 'מחסן (יחידה)',
+};
+export const RESIDENTIAL_ASSET_TYPES: ReadonlySet<AssetType> = new Set(['apartment', 'penthouse', 'garden_apartment', 'house']);

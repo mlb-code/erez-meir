@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { formatCurrency, formatRooms, photoUrl } from '@/lib/format';
+import { formatCurrency, photoUrl } from '@/lib/format';
 import {
   describeCashFlexibility,
   describeWantedSummary,
   listingFeatures,
+  listingTitle,
 } from '@/lib/listing-text';
 import type { ListingWithPhotos } from '@/lib/types';
 
@@ -36,7 +37,7 @@ export function ListingCard({ listing }: { listing: ListingWithPhotos }) {
 
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-body font-bold text-ink-900">
-          {formatRooms(listing.rooms)} ב{listing.city}
+          {listingTitle(listing)}
         </h3>
         <p className="mt-0.5 text-caption text-ink-500">
           {listing.neighborhood ?? 'ללא שכונה'} · {listing.size_sqm} מ״ר
