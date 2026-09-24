@@ -6,6 +6,7 @@
 import { readFileSync } from 'node:fs';
 import pg from 'pg';
 import { computeMatches, type MatchableListing } from '../src/lib/matching/engine';
+import { DEMO_EXPECTED_MATCHES } from '../src/lib/constants';
 
 for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split('\n')) {
   const m = line.match(/^([A-Z_]+)=(.*)$/);
@@ -27,6 +28,7 @@ const { rows } = await db.query(`
          l.wanted_min_rooms::float, l.wanted_max_rooms::float, l.wanted_min_sqm, l.wanted_min_floor,
          l.wanted_value_min::float, l.wanted_value_max::float, l.wanted_available_from, l.wanted_available_until,
          l.must_haves::text[] as must_haves, l.soft_prefs, l.cash_add_max::float, l.cash_receive_min::float,
+         l.land_is_fenced, l.land_is_vacant,
          (p.identity_status = 'verified') as identity_verified, u.email
   from public.listings l join auth.users u on u.id = l.owner_id join public.profiles p on p.id = l.owner_id
   where l.status = 'active'`);
@@ -34,6 +36,26 @@ const { rows } = await db.query(`
 const emailOf = new Map(rows.map((r) => [r.id, r.email as string]));
 // הדמו מחשב עד 5 כדי לשמור את השרשרת של 4 (מדיניות התצוגה בייצור: MAX_CHAIN_LENGTH_SHOWN)
 const matches = computeMatches(rows as unknown as MatchableListing[], 5);
+
+// נתוני הדמו מתוכננים למעגלים מסוימים (§16.2, חבילה C1). סטייה כאן פירושה
+// ששינוי ב-seed.sql הזיז קשת בגרף — עוצרים לפני שכותבים מצב דמו שגוי.
+const found = {
+  direct: matches.filter((m) => m.match_type === 'direct').length,
+  chains3: matches.filter((m) => m.chain_listing_ids.length === 3).length,
+  chains4: matches.filter((m) => m.chain_listing_ids.length === 4).length,
+};
+if (
+  found.direct !== DEMO_EXPECTED_MATCHES.direct ||
+  found.chains3 !== DEMO_EXPECTED_MATCHES.chains3 ||
+  found.chains4 !== DEMO_EXPECTED_MATCHES.chains4
+) {
+  console.error(
+    `נתוני הדמו סוטים מהמתוכנן: ציפינו ל-${DEMO_EXPECTED_MATCHES.direct}/${DEMO_EXPECTED_MATCHES.chains3}/${DEMO_EXPECTED_MATCHES.chains4} ` +
+      `(ישירות/שרשראות של 3/שרשרת של 4) וקיבלנו ${found.direct}/${found.chains3}/${found.chains4}.`,
+  );
+  await db.end();
+  process.exit(1);
+}
 
 await db.query('delete from public.matches');
 for (const m of matches) {

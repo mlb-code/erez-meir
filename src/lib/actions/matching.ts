@@ -2,17 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { ENGINE_LISTING_SELECT } from '@/lib/constants';
 import { computeMatches, type MatchableListing } from '@/lib/matching/engine';
 import { MATCHING_CONFIG } from '@/lib/matching/config';
 import { createClient } from '@/lib/supabase/server';
-
-const ENGINE_FIELDS =
-  'id, owner_id, asset_type, city, neighborhood_id, rooms, size_sqm, floor, asking_value, ' +
-  'has_elevator, has_parking, has_balcony, has_safe_room, condition, building_year, urban_renewal_status, ' +
-  'has_mortgage, has_caveats, has_liens, has_tenant, available_from, available_until, availability_flex_months, ' +
-  'locked_until, wanted_asset_types, wanted_cities, wanted_neighborhood_ids, wanted_min_rooms, wanted_max_rooms, ' +
-  'wanted_min_sqm, wanted_min_floor, wanted_value_min, wanted_value_max, wanted_available_from, ' +
-  'wanted_available_until, must_haves, soft_prefs, cash_add_max, cash_receive_min';
 
 /**
  * מריץ את מנוע ההתאמות על כל המודעות הפעילות ושומר את המעגלים שנמצאו.
@@ -26,7 +19,7 @@ export async function runMatching(): Promise<{ found: number; saved: number }> {
 
   const { data, error } = await supabase
     .from('listings')
-    .select(ENGINE_FIELDS)
+    .select(ENGINE_LISTING_SELECT)
     .eq('status', 'active');
 
   if (error) throw error;

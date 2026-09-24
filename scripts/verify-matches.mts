@@ -7,6 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { computeMatches, describeCycle, type MatchableListing } from '../src/lib/matching/engine';
+import { DEMO_EXPECTED_MATCHES, ENGINE_LISTING_SELECT } from '../src/lib/constants';
 import { formatCurrency } from '../src/lib/format';
 
 for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split('\n')) {
@@ -19,11 +20,10 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
+// אותה שליפה בדיוק שהאפליקציה עושה — אחרת הסקריפט בודק גרף אחר מזה שרץ בייצור.
 const { data, error } = await supabase
   .from('listings')
-  .select(
-    'id, city, neighborhood, rooms, size_sqm, asking_value, has_elevator, has_parking, has_balcony, has_safe_room, condition, wanted_cities, wanted_min_rooms, wanted_max_rooms, wanted_min_sqm, must_haves, cash_add_max, cash_receive_min',
-  )
+  .select(`${ENGINE_LISTING_SELECT}, neighborhood`)
   .eq('status', 'active');
 
 if (error) throw error;
@@ -44,6 +44,13 @@ console.log(`  שרשראות של 3: ${chains3.length}`);
 console.log(`  שרשראות של 4: ${chains4.length}`);
 console.log(`  שרשראות של 5: ${chains5.length}\n`);
 
+const expected = DEMO_EXPECTED_MATCHES;
+const asExpected =
+  direct.length === expected.direct &&
+  chains3.length === expected.chains3 &&
+  chains4.length === expected.chains4 &&
+  chains5.length === 0;
+
 for (const match of matches) {
   const cycle = match.chain_listing_ids.map((id) => byId.get(id)!);
   const label = match.match_type === 'direct' ? 'ישירה' : `שרשרת של ${cycle.length}`;
@@ -61,3 +68,13 @@ for (const match of matches) {
   console.log(`[${match.score}] ${label}: ${steps}`);
 }
 console.log();
+
+if (asExpected) {
+  console.log('נתוני הדמו מייצרים בדיוק את המעגלים המתוכננים.\n');
+} else {
+  console.error(
+    `הדמו סוטה מהמתוכנן: ציפינו ל-${expected.direct} ישירות, ${expected.chains3} שרשראות של 3 ` +
+      `ושרשרת אחת של 4, וקיבלנו ${direct.length}/${chains3.length}/${chains4.length}.\n`,
+  );
+  process.exit(1);
+}

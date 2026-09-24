@@ -8,6 +8,7 @@
 import { readFileSync } from 'node:fs';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { computeMatches, type MatchableListing } from '../src/lib/matching/engine';
+import { ENGINE_LISTING_SELECT } from '../src/lib/constants';
 
 for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split('\n')) {
   const match = line.match(/^([A-Z_]+)=(.*)$/);
@@ -17,11 +18,6 @@ for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const PASSWORD = 'Demo1234!';
-
-const ENGINE_FIELDS =
-  'id, city, rooms, size_sqm, asking_value, has_elevator, has_parking, has_balcony, ' +
-  'has_safe_room, condition, wanted_cities, wanted_min_rooms, wanted_max_rooms, ' +
-  'wanted_min_sqm, must_haves, cash_add_max, cash_receive_min';
 
 let failures = 0;
 function check(label: string, condition: boolean, detail = '') {
@@ -59,7 +55,7 @@ const { client: yehuda, userId: yehudaId } = await signIn('yehuda@demo.swap.co.i
 check('התחברות הצליחה', Boolean(yehudaId));
 
 console.log('\n2) הרצת מנוע ההתאמות ושמירה דרך ה-RPC');
-const { data: rows } = await yehuda.from('listings').select(ENGINE_FIELDS).eq('status', 'active');
+const { data: rows } = await yehuda.from('listings').select(ENGINE_LISTING_SELECT).eq('status', 'active');
 const matches = computeMatches((rows ?? []) as unknown as MatchableListing[]);
 const { data: savedCount, error: rpcError } = await yehuda.rpc('save_matches', {
   p_matches: matches,

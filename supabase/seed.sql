@@ -5,6 +5,11 @@
 --
 --  המודעות מתוכננות כך שמנוע ההתאמות ימצא בדיוק:
 --    3 התאמות ישירות, 2 שרשראות תלת-כיווניות ושרשרת אחת של 4.
+--
+--  המודעות ממלאות גם את שדות איפיון v1.0 (§4.3): גוש/חלקה/תת־חלקה, סוג זכות,
+--  מצב משפטי, חלונות פינוי ומעבר, מספר חניות, מחסן והעדפות רכות. השדות שנוספו
+--  נבחרו כך שלא ישנו אף קשת בגרף ההתאמות — ראו הערת חלונות הזמן ליד seed_extra
+--  ואת בלוק הבקרה בסוף הקובץ.
 -- ===========================================================================
 
 delete from auth.users where email like '%@demo.swap.co.il';
@@ -129,6 +134,133 @@ insert into seed_rows values
  'ארבעה חדרים משופצים בצפון הישן, ממ״ד, מרפסת, חניה ומעלית. מחפש וילה או דירת גן גדולה בשרון — ומצפה להשלמה של לפחות מיליון שקל.',
  array['הרצליה','רמת השרון','רעננה'],5,7,150,array['parking','safe_room','elevator']::public.property_feature[],0,1000000,49,50);
 
+-- ---------------------------------------------------------------------------
+--  שדות איפיון v1.0 לכל מודעת דמו (§4.3): זיהוי, מצב משפטי, חלונות זמן,
+--  העדפות רכות. מופרד לטבלה משלו לפי אימייל כדי שהשורות למעלה יישארו קריאות.
+--
+--  כלל שמירה על נתוני הדמו: חלונות הזמן נבנו כך שכל חלון מעבר מבוקש מכיל את
+--  כל חלוני המסירה (מסירה בטווח 05.2027–01.2028, מעבר מבוקש מ-04.2027 ומטה
+--  ועד 02.2028 ומעלה, או NULL = גמיש). אחרת מסנן הזמן של המנוע (§6.2) היה
+--  מוחק קשתות, ומספר ההתאמות בדמו היה משתנה. בדיקה אוטומטית בסוף הקובץ.
+--  מאותה סיבה wanted_value_min/max, wanted_min_floor ו-wanted_neighborhood_ids
+--  נשארים ריקים בדמו — "כל העיר", בלי טווח שווי מבוקש.
+--
+--  גוש/חלקה/תת־חלקה מומצאים, בפורמט הנכון ובטווחים סבירים לכל עיר.
+-- ---------------------------------------------------------------------------
+create temp table seed_extra (
+  email text primary key,
+  house_number text, gush int, helka int, tat_helka int,
+  right_type public.right_type, lease_contract_no text,
+  parking_count smallint, has_storage boolean,
+  has_mortgage boolean, mortgage_balance bigint,
+  has_caveats boolean, has_liens boolean,
+  has_tenant boolean, tenant_lease_ends date,
+  available_from date, available_until date, availability_flex smallint,
+  wanted_from date, wanted_until date,
+  wanted_types public.asset_type[], soft_prefs jsonb
+);
+
+insert into seed_extra values
+('yehuda@demo.swap.co.il','27',6212,118,14,'ownership',null,0,false,true,1250000,false,false,false,null,
+ '2027-05-01','2027-11-01',3,'2027-03-01','2028-03-31',array['apartment','garden_apartment']::public.asset_type[],
+ '{"elevator":2,"parking":3,"balcony":1,"safe_room":2,"new_building":0,"renovated":1,"urban_renewal":0}'),
+
+('michal@demo.swap.co.il','9',6541,62,8,'ownership',null,1,true,false,null,false,false,false,null,
+ '2027-06-15','2027-12-31',1,'2027-04-01','2028-02-29',array['apartment','penthouse']::public.asset_type[],
+ '{"elevator":3,"parking":1,"balcony":2,"safe_room":0,"new_building":1,"renovated":3,"urban_renewal":0}'),
+
+('avi@demo.swap.co.il','145',6128,205,22,'ownership',null,0,true,true,900000,false,false,false,null,
+ '2027-07-01','2028-01-31',3,null,null,array['apartment']::public.asset_type[],
+ '{"elevator":1,"parking":3,"balcony":1,"safe_room":2,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('tamar@demo.swap.co.il','38',6161,77,5,'ownership',null,1,false,false,null,true,false,false,null,
+ '2027-05-01','2027-12-01',1,'2027-02-01','2028-04-30',array['apartment']::public.asset_type[],
+ '{"elevator":3,"parking":2,"balcony":1,"safe_room":1,"new_building":0,"renovated":2,"urban_renewal":1}'),
+
+('shira@demo.swap.co.il','12',6580,143,9,'ownership',null,2,true,true,800000,false,false,false,null,
+ '2027-09-01','2028-01-31',3,'2027-03-01','2028-06-30',array['apartment','penthouse']::public.asset_type[],
+ '{"elevator":2,"parking":1,"balcony":3,"safe_room":0,"new_building":0,"renovated":2,"urban_renewal":0}'),
+
+('noam@demo.swap.co.il','5',6216,88,17,'ownership',null,0,false,true,1600000,false,false,false,null,
+ '2027-06-01','2027-12-31',1,'2027-04-01','2028-03-31',array['apartment','house']::public.asset_type[],
+ '{"elevator":1,"parking":3,"balcony":2,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('david@demo.swap.co.il','64',6355,312,28,'ownership',null,1,true,true,700000,false,false,false,null,
+ '2027-05-15','2027-11-30',3,null,null,array['apartment','garden_apartment']::public.asset_type[],
+ '{"elevator":2,"parking":3,"balcony":2,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('orly@demo.swap.co.il','210',3928,41,31,'lease_rmi','ח-2014/3871',1,true,true,1100000,false,false,false,null,
+ '2027-08-01','2028-01-31',1,'2027-01-01','2028-05-31',array['apartment']::public.asset_type[],
+ '{"elevator":3,"parking":2,"balcony":1,"safe_room":2,"new_building":0,"renovated":2,"urban_renewal":0}'),
+
+('roni@demo.swap.co.il','19',6159,154,11,'ownership',null,0,false,false,null,false,false,true,'2027-09-30',
+ '2027-10-01','2028-01-31',1,'2027-03-01','2028-04-30',array['apartment','garden_apartment']::public.asset_type[],
+ '{"elevator":1,"parking":3,"balcony":2,"safe_room":2,"new_building":2,"renovated":1,"urban_renewal":0}'),
+
+('gil@demo.swap.co.il','22',6167,96,3,'ownership',null,0,false,false,null,true,false,false,null,
+ '2027-05-01','2027-10-31',6,'2027-02-01','2028-06-30',array['apartment']::public.asset_type[],
+ '{"elevator":2,"parking":1,"balcony":1,"safe_room":3,"new_building":2,"renovated":3,"urban_renewal":0}'),
+
+('efrat@demo.swap.co.il','71',6417,128,12,'ownership',null,1,true,true,1400000,false,false,false,null,
+ '2027-07-01','2028-01-31',3,'2027-04-01','2028-03-31',array['apartment','house','garden_apartment']::public.asset_type[],
+ '{"elevator":2,"parking":3,"balcony":2,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('yossi@demo.swap.co.il','3',6668,25,7,'ownership',null,2,true,false,null,false,false,false,null,
+ '2027-06-01','2027-12-31',1,null,null,array['apartment']::public.asset_type[],
+ '{"elevator":2,"parking":1,"balcony":3,"safe_room":0,"new_building":0,"renovated":2,"urban_renewal":0}'),
+
+('maya@demo.swap.co.il','16',6921,44,2,'ownership',null,0,false,true,950000,false,false,false,null,
+ '2027-05-01','2027-11-30',3,'2027-03-01','2028-02-29',array['apartment']::public.asset_type[],
+ '{"elevator":3,"parking":2,"balcony":2,"safe_room":1,"new_building":0,"renovated":1,"urban_renewal":0}'),
+
+('eran@demo.swap.co.il','40',6154,183,24,'ownership',null,1,false,true,1050000,false,false,false,null,
+ '2027-06-01','2027-12-31',1,'2027-04-01','2028-03-31',array['apartment','garden_apartment']::public.asset_type[],
+ '{"elevator":2,"parking":2,"balcony":1,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('hadas@demo.swap.co.il','7',6712,259,36,'ownership',null,1,true,true,1300000,false,false,false,null,
+ '2027-07-01','2028-01-31',3,'2027-02-01','2028-05-31',array['apartment']::public.asset_type[],
+ '{"elevator":3,"parking":2,"balcony":2,"safe_room":2,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('itai@demo.swap.co.il','88',6285,67,19,'ownership',null,1,false,false,null,false,false,true,'2027-12-31',
+ '2028-01-01','2028-01-31',3,'2027-04-01','2028-06-30',array['apartment']::public.asset_type[],
+ '{"elevator":1,"parking":1,"balcony":3,"safe_room":0,"new_building":0,"renovated":3,"urban_renewal":1}'),
+
+('lior@demo.swap.co.il','31',7062,112,6,'housing_company',null,0,false,false,null,true,false,false,null,
+ '2027-05-01','2027-11-01',6,'2027-01-01','2028-04-30',array['apartment']::public.asset_type[],
+ '{"elevator":1,"parking":2,"balcony":2,"safe_room":1,"new_building":0,"renovated":1,"urban_renewal":2}'),
+
+('sigal@demo.swap.co.il','9',6206,231,38,'ownership',null,2,true,true,1900000,false,false,false,null,
+ '2027-08-01','2028-01-31',1,'2027-03-01','2028-06-30',array['apartment','penthouse']::public.asset_type[],
+ '{"elevator":3,"parking":3,"balcony":2,"safe_room":2,"new_building":2,"renovated":2,"urban_renewal":0}'),
+
+('nadav@demo.swap.co.il','14',6532,53,4,'ownership',null,0,false,true,1150000,false,false,false,null,
+ '2027-06-01','2027-12-31',3,null,null,array['apartment','garden_apartment']::public.asset_type[],
+ '{"elevator":1,"parking":2,"balcony":2,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('ruth@demo.swap.co.il','25',6602,19,2,'lease_rmi','ח-2011/5520',2,true,false,null,false,false,false,null,
+ '2027-09-01','2028-01-31',1,'2027-04-01','2028-03-31',array['apartment','penthouse']::public.asset_type[],
+ '{"elevator":3,"parking":3,"balcony":2,"safe_room":3,"new_building":1,"renovated":2,"urban_renewal":0}'),
+
+('amir@demo.swap.co.il','6',7652,174,16,'ownership',null,1,true,true,1000000,false,false,false,null,
+ '2027-05-01','2027-11-30',3,'2027-02-01','2028-05-31',array['apartment','house']::public.asset_type[],
+ '{"elevator":1,"parking":3,"balcony":1,"safe_room":3,"new_building":1,"renovated":1,"urban_renewal":0}'),
+
+('galit@demo.swap.co.il','52',6394,88,9,'ownership',null,0,false,true,620000,false,true,false,null,
+ '2027-06-01','2027-12-31',6,'2027-03-01','2028-04-30',array['apartment']::public.asset_type[],
+ '{"elevator":2,"parking":2,"balcony":2,"safe_room":1,"new_building":1,"renovated":2,"urban_renewal":0}'),
+
+('shaul@demo.swap.co.il','17',5029,203,27,'ownership',null,1,false,false,null,false,false,true,'2027-08-31',
+ '2027-09-01','2028-01-31',1,'2027-01-01','2028-04-30',array['apartment']::public.asset_type[],
+ '{"elevator":1,"parking":1,"balcony":2,"safe_room":0,"new_building":1,"renovated":3,"urban_renewal":1}'),
+
+('dana@demo.swap.co.il','11',6157,141,21,'ownership',null,1,true,true,1750000,false,false,false,null,
+ '2027-07-01','2028-01-31',3,'2027-04-01','2028-06-30',array['apartment','garden_apartment','house']::public.asset_type[],
+ '{"elevator":2,"parking":3,"balcony":2,"safe_room":3,"new_building":2,"renovated":1,"urban_renewal":0}'),
+
+('boaz@demo.swap.co.il','104',6903,35,13,'ownership',null,1,true,false,null,false,false,false,null,
+ '2027-05-01','2027-10-31',6,'2027-01-01','2028-09-30',array['house','garden_apartment','apartment']::public.asset_type[],
+ '{"elevator":3,"parking":3,"balcony":3,"safe_room":3,"new_building":2,"renovated":2,"urban_renewal":0}');
+
 -- משתמשי הדמו, מאומתים מראש
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password,
@@ -155,19 +287,35 @@ select gen_random_uuid(), u.id::text, u.id,
 from auth.users u
 where u.email like '%@demo.swap.co.il';
 
--- המודעות
+-- המודעות. כולן דירות מגורים מאומתות (ownership_status = 'approved'), ולכן פעילות:
+-- האילוץ listings_active_requires_ownership מחייב אישור בעלות לכל מודעה פעילה.
 insert into public.listings (
-  owner_id, status, city, neighborhood, street, rooms, size_sqm, floor, total_floors,
-  has_elevator, has_parking, has_balcony, has_safe_room, building_year, condition, urban_renewal_status,
-  asking_value, description, wanted_cities, wanted_min_rooms, wanted_max_rooms, wanted_min_sqm,
-  must_haves, cash_add_max, cash_receive_min
+  owner_id, status, ownership_status, asset_type,
+  city, neighborhood, street, house_number, rooms, size_sqm, floor, total_floors,
+  has_elevator, has_parking, parking_count, has_balcony, has_safe_room, has_storage,
+  building_year, condition, urban_renewal_status,
+  gush, helka, tat_helka, right_type, lease_contract_no,
+  has_mortgage, mortgage_balance, has_caveats, has_liens, has_tenant, tenant_lease_ends,
+  available_from, available_until, availability_flex_months,
+  asking_value, description,
+  wanted_asset_types, wanted_cities, wanted_min_rooms, wanted_max_rooms, wanted_min_sqm,
+  wanted_available_from, wanted_available_until, must_haves, soft_prefs,
+  cash_add_max, cash_receive_min
 )
 select
-  u.id, 'active', s.city, s.neighborhood, s.street, s.rooms, s.size_sqm, s.floor, s.total_floors,
-  s.has_elevator, s.has_parking, s.has_balcony, s.has_safe_room, s.building_year, s.condition, s.urban_renewal,
-  s.asking_value, s.description, s.wanted_cities, s.w_min_rooms, s.w_max_rooms, s.w_min_sqm,
-  s.must_haves, s.cash_add_max, s.cash_receive_min
+  u.id, 'active', 'approved', 'apartment',
+  s.city, s.neighborhood, s.street, e.house_number, s.rooms, s.size_sqm, s.floor, s.total_floors,
+  s.has_elevator, s.has_parking, e.parking_count, s.has_balcony, s.has_safe_room, e.has_storage,
+  s.building_year, s.condition, s.urban_renewal,
+  e.gush, e.helka, e.tat_helka, e.right_type, e.lease_contract_no,
+  e.has_mortgage, e.mortgage_balance, e.has_caveats, e.has_liens, e.has_tenant, e.tenant_lease_ends,
+  e.available_from, e.available_until, e.availability_flex,
+  s.asking_value, s.description,
+  e.wanted_types, s.wanted_cities, s.w_min_rooms, s.w_max_rooms, s.w_min_sqm,
+  e.wanted_from, e.wanted_until, s.must_haves, e.soft_prefs,
+  s.cash_add_max, s.cash_receive_min
 from seed_rows s
+join seed_extra e on e.email = s.email
 join auth.users u on u.email = s.email;
 
 -- קישור לשכונה מהטבלה הסגורה (public.neighborhoods, מיגרציה 005) לפי (עיר, שם).
@@ -193,6 +341,56 @@ join auth.users u on u.email = s.email
 join public.listings l on l.owner_id = u.id;
 
 drop table seed_rows;
+drop table seed_extra;
+
+-- ---------------------------------------------------------------------------
+--  בקרה: מה שמגן על מצב הדמו (3 ישירות, 2 שרשראות של 3, שרשרת של 4)
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  bad int;
+  detail text;
+begin
+  -- 1. מספר החניות חייב להתאים ל-has_parking, אחרת המסנן "חובה חניה" והתצוגה יסתרו זה את זה
+  select count(*) into bad
+  from public.listings l join auth.users u on u.id = l.owner_id
+  where u.email like '%@demo.swap.co.il'
+    and l.has_parking <> (l.parking_count > 0);
+  if bad > 0 then
+    raise exception 'seed: % מודעות שבהן has_parking לא תואם ל-parking_count', bad;
+  end if;
+
+  -- 2. שוכר בנכס — חוזה השכירות חייב להסתיים לפני תחילת חלון המסירה
+  select count(*) into bad
+  from public.listings l join auth.users u on u.id = l.owner_id
+  where u.email like '%@demo.swap.co.il'
+    and l.has_tenant and l.tenant_lease_ends > l.available_from;
+  if bad > 0 then
+    raise exception 'seed: % מודעות שבהן חוזה השכירות מסתיים אחרי מועד המסירה', bad;
+  end if;
+
+  -- 3. חלונות הזמן: כל חלון מעבר מבוקש חייב להיחתך עם כל חלון מסירה (מורחב בגמישות).
+  --    אחרת מסנן הזמן של המנוע (§6.2) מוחק קשתות ומספר ההתאמות בדמו משתנה.
+  select count(*), string_agg(distinct ua.email || ' → ' || ub.email, ', ')
+    into bad, detail
+  from public.listings a
+  join auth.users ua on ua.id = a.owner_id and ua.email like '%@demo.swap.co.il'
+  join public.listings b on b.id <> a.id
+  join auth.users ub on ub.id = b.owner_id and ub.email like '%@demo.swap.co.il'
+  where (a.wanted_available_from is not null or a.wanted_available_until is not null)
+    and (b.available_from is not null or b.available_until is not null)
+    and (
+      -- חפיפה באורך אפס נחשבת אצל המנוע כאי־חפיפה, ולכן ההשוואה כאן אינה חזקה
+      coalesce(a.wanted_available_from, '-infinity'::date)
+        >= coalesce(b.available_until, 'infinity'::date) + make_interval(months => b.availability_flex_months)
+      or coalesce(a.wanted_available_until, 'infinity'::date)
+        <= coalesce(b.available_from, '-infinity'::date) - make_interval(months => b.availability_flex_months)
+    );
+  if bad > 0 then
+    raise exception 'seed: % זוגות עם חלונות זמן שאינם נחתכים (%)', bad, left(detail, 200);
+  end if;
+end $$;
+
 
 -- ===========================================================================
 --  אחרי הרצת הקובץ הזה: מריצים `npm run verify:matches` כדי לראות את המעגלים,
